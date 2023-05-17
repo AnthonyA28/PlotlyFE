@@ -252,7 +252,7 @@ var inputer_layout = new inputer("app", {
 				autosize: {it: "boolen", def:true},
 			font: {
 					family: {it: "text",def: 'Segoe UI',},
-					size: {it: "number",def: 15,},
+					size: {it: "number",def: 10,},
 					color: {it: 'text', def:'#000000'},
 			},
 			itemwidth: {it: "number", def: 10},
@@ -272,7 +272,7 @@ var inputer_layout = new inputer("app", {
 			zeroline: {it: 'boolean', 'def': false},
 			dtick:  {it: "text",def: '',},
 			tickformat: {it: "text",def: '',},
-			exponentformat: {it: "option",options: ["none" , "e" , "E" , "power" , "SI" , "B"],},
+			exponentformat: {it: "option",options: ["power", "none" , "e" , "E" , "SI" , "B"],},
 			minor:{
 				dtick:  {it: "text",def: '',},
 				tickmode: {it: "text",def: 'auto',},
@@ -291,7 +291,7 @@ var inputer_layout = new inputer("app", {
 			showgrid: {it: 'boolean', 'def': false},
 			tickfont: {
 					family: {it: "text",def: 'Segoe UI',},
-					size: {it: "number",def: 15,},
+					size: {it: "number",def: 10,},
 					color: {it: 'text', def:'#000000'},
 			},
 		},
@@ -307,7 +307,7 @@ var inputer_layout = new inputer("app", {
 			zeroline: {it: 'boolean', 'def': true},
 			dtick: {it: "text",def: '',},
 			tickformat: {it: "text",def: "",},
-			exponentformat: {it: "option", options: ["none" , "e" , "E" , "power" , "SI" , "B"],},
+			exponentformat: {it: "option", options: ["power", "none" , "e" , "E" , "SI" , "B"],},
 			minor:{
 				dtick: {it: "text",def: '',},
 				tickmode: {it: "text",def: 'auto',},
@@ -326,25 +326,25 @@ var inputer_layout = new inputer("app", {
 			showgrid: {it: 'boolean', 'def': false},
 			tickfont: {
 					family: {it: "text",def: 'Segoe UI',},
-					size: {it: "number",def: 15,},
+					size: {it: "number",def: 10,},
 					color: {it: 'text', def:'#000000'},
 			},
 		},
 		margin:{
 			b: {it: "number",def: 80,},
-			l: {it: "number",def: 80,},
-			r: {it: "number",def: 80,},
+			l: {it: "number",def: 35,},
+			r: {it: "number",def: 5,},
 			t: {it: "number",def: 80,},
 			pad: {it: "number",def: 0,},
 		},
 		font: {
 				family: {it: "text",def: 'Segoe UI',},
-				size: {it: "number",def: 15,},
+				size: {it: "number",def: 10,},
 				color: {it: 'text', def:'#000000'},
 		},
 
-		width: {it: "number",def: 350,},
-		height: {it: "number",def: 350,},
+		width: {it: "number",def: 313,},
+		height: {it: "number",def: 313,},
 		// paper_bgcolor: {it: "text",def:'rgba(0,0,0,0)',},
 		// plot_bgcolor: {it: "text",def:'rgba(0,0,0,0)',},
 }, function(e){
