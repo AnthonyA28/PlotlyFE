@@ -35,7 +35,7 @@ function make_trace_boxes(){
 			visible: {it: "option", options: ['true' , 'false' , "legendonly" ]},
 			line: {
 				width: {it: "number", def: 3,},
-				shape: {it: "option", options: ["linear", "spline", "hv", "vh", "hvh", "vhv"],},
+				shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
 				dash: {it: "option", options: ["solid", "dot", "dash", "longdash", "dashdot", "longdashdot"],},
 				smoothing: {it: "number", def: 0,},
 				color: {it: "option", options: colors_palettes["pyDefault"]},
@@ -128,7 +128,7 @@ function plot(header, data, update_nums=false){
 		}else{
 
 		var marker_shape = marker_shapes[j%marker_shapes.length];
-		var line_shape = line_shapes[j%line_shapes.length];
+		var line_shape = line_shapes[0];
 		var color = colors_palettes['pyDefault'][j%colors_palettes['pyDefault'].length];
 		
 		var trace = {
@@ -199,7 +199,7 @@ var inputer_master_trace = new inputer("appM", {
 		type: {it: "option", options: ["scatter", 'bar']},
 		line: {
 			width: {it: "number", def: 3,},
-			shape: {it: "option", options: ["linear", "spline", "hv", "vh", "hvh", "vhv"],},
+			shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
 			dash: {it: "option", options: ["solid", "dot", "dash", "longdash", "dashdot", "longdashdot"],},
 			smoothing: {it: "number", def: 0,},
 			// color: {it: "text", def: ""},
@@ -600,6 +600,15 @@ document.getElementById('open_templates').addEventListener( 'click', function(){
 });
 
 
+document.getElementById('helper_reset_colors').addEventListener( 'click', function(){
+	console.log("helper_reset_colors")
+	
+	for(var i = 0; i < inputer_traces.length; i += 1 ){
+		inputer_traces[i].inputs.marker.color.elem.selectedIndex = i
+		inputer_traces[i].inputs.line.color.elem.selectedIndex = i
+	}
+	update();
+});
 
 document.getElementById('helper_pair_colors').addEventListener( 'click', function(){
 	console.log("helper_pair_colors")
