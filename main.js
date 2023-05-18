@@ -68,6 +68,9 @@ function createWindow () {
 
 
 }
+
+
+
  app.on('activate', function () {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
@@ -85,8 +88,10 @@ app.on('window-all-closed', function () {
   }
 })
 
+
+
 ipcMain.on("get_templates", function(event, arg){
-  var dir = app.getPath('userData');
+  var dir = path.normalize(app.getPath('userData'));
   console.log("dir ", dir);
   var templates = [];
   fs.readdir(dir, (err, files) => {
@@ -99,22 +104,25 @@ ipcMain.on("get_templates", function(event, arg){
     console.log(templates);
     event.sender.send('available_templates', templates);   
   });
+
+  get_templ_from_name(event, "default.json");
 });
 
-ipcMain.on("get_template_from_name", function(event, arg){
+function get_templ_from_name(event,arg){
   var dir = app.getPath('userData');
-  var file_path  = dir.concat("\\").concat(arg);
-  console.log("Loading ", file_path); 
+  var file_path  = path.join(dir,arg);
+  console.log("Loading ", path.normalize(file_path)); 
   fs.readFile(file_path, {encoding: 'utf-8'}, function(err,data){
     if (!err) {
-        // console.log('received data: ' + data);
+        console.log('received data: ' + data);
         event.sender.send('load_templ', data); 
     } else {
         console.log(err);
     }
   });
+}
 
-});
+ipcMain.on("get_template_from_name", get_templ_from_name);
 
 ipcMain.on("open_templates", function(event, arg){
   shell.openPath(app.getPath('userData'));
@@ -137,7 +145,7 @@ ipcMain.on("save_template", function(event, arg){
       } else {
           console.log("save_template:", arg);
           console.log(app.getPath('userData'));
-          var savename = app.getPath('userData').concat("\\").concat(r).concat(".json")
+          var savename = path.join(app.getPath('userData'), r.concat(".json"))
           console.log(savename);
           fs.writeFile(savename, arg, function (err) {
           if (err) return console.log(err);
