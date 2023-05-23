@@ -6,6 +6,9 @@
 <script type="text/javascript">window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);</script>
 <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
 <style type="text/css">
   body
   {
@@ -37,16 +40,16 @@
     
     <div style="display: inline-block;width:350px;height:1000px;border: 1px solid #FFFFFF; vertical-align: top;">
       Open<input type="file" id="input_file">
-      <br>
+      <!-- <br> -->
         <button type="submit" id="download" > Export json</button>
-        <button type="submit" id="save_template"> Save template </button> 
-        <button type="submit" id="open_templates"> Open templates</button> 
+        <!-- <button type="submit" id="save_template"> Save template </button>  -->
+        <!-- <button type="submit" id="open_templates"> Open templates</button>  -->
         <div id="template_div"><strong>Choose Template:</strong> 
         </div>
         <div ><strong>Update:</strong>
-          Trace styles <input type="checkbox"  id="update_trace_styles_check" >
-          Trace names  <input type="checkbox"  id="update_trace_names_check" >
-          Axes labels  <input type="checkbox"  id="update_axes_labels_check" >
+          Trace styles <input type="checkbox"  id="update_trace_styles_check" checked >
+          <!-- Trace names  <input type="checkbox"  id="update_trace_names_check" >
+          Axes labels  <input type="checkbox"  id="update_axes_labels_check" > -->
         </div>
 
       <br>
@@ -91,11 +94,13 @@
       <h3>Master Trace:</h3>
       <div id="appM"></div>
 
-    <button type="submit" id="helper_reset_colors">helper_reset_colors</button> 
+    <button type="submit" id="helper_reset_colors">Reset Colors</button> 
     
-    <button type="submit" id="helper_pair_colors">helper_pair_colors</button> 
+    <button type="submit" id="helper_pair_colors">Pair Colors</button> 
 
-    <button type="submit" id="helper_pair_markers_co">helper_pair_markers_co</button> 
+    <button type="submit" id="helper_pair_markers">Pair Markers</button> 
+
+    <button type="submit" id="helper_pair_linestyles">Pair Linestyles</button> 
 
     
     </div>
@@ -313,6 +318,6 @@
 
 
 <script >if (window.module) module = window.module;</script>
-<script type="module" src="index.js">
+<script src="index.js">
 </script>
 
