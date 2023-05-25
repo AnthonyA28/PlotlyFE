@@ -41,7 +41,7 @@
     <div style="display: inline-block;width:350px;height:1000px;border: 1px solid #FFFFFF; vertical-align: top;">
       Open<input type="file" id="input_file">
       <!-- <br> -->
-        <button type="submit" id="download" > Export json</button>
+        <button type="submit" id="download" > Export json</button> Template: <input type="text" id="template_text_box">
         <!-- <button type="submit" id="save_template"> Save template </button>  -->
         <!-- <button type="submit" id="open_templates"> Open templates</button>  -->
         <div id="template_div"><strong>Choose Template:</strong> 
@@ -98,11 +98,14 @@
     
     <button type="submit" id="helper_pair_colors">Pair Colors</button> 
 
+
+    <br>
+
     <button type="submit" id="helper_pair_markers">Pair Markers</button> 
 
     <button type="submit" id="helper_pair_linestyles">Pair Linestyles</button> 
 
-    
+
     </div>
 
     <div style="display: inline-block;width:410px;height:410px;border: 1px solid #FFFFFF; vertical-align:  top" id="gd_div">
@@ -318,6 +321,7 @@
 
 
 <script >if (window.module) module = window.module;</script>
+<script src="templates.js"></script>
 <script src="index.js">
 </script>
 
