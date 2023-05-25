@@ -357,18 +357,21 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
   var l = json["layout"]
 
 
-    var pal = json["palette"];
-    if( pal.endsWith("_")){
-      pal = pal.slice(0,pal.length-1)
-    }
     var elem = document.getElementById("palettes");
     var colors =[...elem.options].map(o => o.value)
     pal = json["palette"]
     if( pal.endsWith("_")){
       document.getElementById("n_colors").value = parseInt(pal.slice(0,1))
       pal = pal.slice(2)
+      console.log(pal);
     }
     selectOption(elem, colors.indexOf(pal));
+    pal = json["palette"]
+    if( pal.endsWith("_")){
+      pal = pal.slice(0, -1)
+      console.log(pal);
+    }
+
     
   var prev_data = []
   for(var i = 0 ; i < traces.length; i ++ ){
@@ -816,5 +819,31 @@ function load_default_template(){
   }
   load_templ(0);
 }
+
+document.getElementById("delete_template").addEventListener('click', function(){
+  var selectedOption = dropdown.options[dropdown.selectedIndex];
+  var selectedText = selectedOption.text;
+
+  var name = "LocalStorage_" + selectedText;
+  console.log("Deleting " + name)
+
+  var item = localStorage.getItem(name);
+
+  if (item !== null) {
+    console.log('Item exists in localStorage');
+    localStorage.removeItem(name);
+    dropdown.options[dropdown.selectedIndex].remove();
+  } else {
+    console.log('Item does not exist in localStorage');
+  }
+});
+
+document.getElementById('make_default_template').addEventListener( 'click', function(){
+
+    var json_text = get_template_text();
+    var name_ = "default"
+    localStorage.setItem("LocalStorage_".concat(name_), json_text);
+
+});
 
 load_default_template()

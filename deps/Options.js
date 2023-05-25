@@ -47,7 +47,7 @@ var OPT_inputer_layout = {
       // tickprefix: {it: "text", def: ""},
       // ticksuffix: {it: "text", def: ""},
       linecolor: {it: "text",def: "#000000",},
-      mirror: {it: "option",options: ["ticks","true", "false" ],},
+      mirror: {it: "option",options: ["false", "ticks","true" ],},
       showgrid: {it: 'boolean', 'def': false},
       // tickfont: {
       //     family: {it: "text",def: 'Segoe UI',},
@@ -84,7 +84,7 @@ var OPT_inputer_layout = {
       // tickprefix: {it: "text", def: ""},
       // ticksuffix: {it: "text", def: ""},
       linecolor: {it: "text",def: "#000000",},
-      mirror: {it: "option",options: ["ticks","true", "false" ],},
+      mirror: {it: "option",options: ["false", "ticks","true" ],},
       showgrid: {it: 'boolean', 'def': false},
       // tickfont: {
       //     family: {it: "text",def: 'Segoe UI',},
