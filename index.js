@@ -34,13 +34,13 @@ function make_trace_boxes(){
 			name: {it: "text", def: "",},
 			visible: {it: "option", options: ['true' , 'false' , "legendonly" ]},
 			line: {
-				width: {it: "number", def: 3,},
+				width: {it: "number", def: 1,},
 				shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
 				dash: {it: "option", options: ["solid", "dot", "dash", "longdash", "dashdot", "longdashdot"],},
 				smoothing: {it: "number", def: 0,},
 				color: {it: "option", options: colors_palettes["pyDefault"]},
 			},
-			mode: {it: "option", options: ['lines',"markers", 'text', 'none', 'lines+markers','lines+markers+text' ]},
+			mode: {it: "option", options: ['lines+markers', 'lines',"markers", 'text', 'none', 'lines+markers+text' ]},
 			marker: {
 				size: {it: "number", def: 6,},
 				symbol: {it: "option", options: marker_shapes,},
@@ -137,9 +137,9 @@ function plot(header, data, update_nums=false){
 				visible: true,
 				name: headers[j],
 				type: 'scatter',
-				mode: 'lines',
+				mode: 'lines+markers',
 				marker: {
-						size: 5,
+						size: 6,
 						symbol: marker_shape,
 						color: color,
 					},
@@ -147,7 +147,7 @@ function plot(header, data, update_nums=false){
 			line: {
 				shape: "spline",
 				dash: line_shape,
-				width: 3,
+				width: 1,
 						color: color,
 			},
 		}
@@ -198,13 +198,13 @@ function plot(header, data, update_nums=false){
 var inputer_master_trace = new inputer("appM", {
 		type: {it: "option", options: ["scatter", 'bar']},
 		line: {
-			width: {it: "number", def: 3,},
+			width: {it: "number", def: 1,},
 			shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
 			dash: {it: "option", options: ["solid", "dot", "dash", "longdash", "dashdot", "longdashdot"],},
 			smoothing: {it: "number", def: 0,},
 			// color: {it: "text", def: ""},
 		},
-		mode: {it: "option", options: [ 'lines',"markers", 'text', 'none', 'lines+markers','lines+markers+text' ]},
+		mode: {it: "option", options: [ 'lines+markers', 'lines',"markers", 'text', 'none','lines+markers+text' ]},
 		marker: {
 			size: {it: "number", def: 6,},
 			symbol: {it: "option", options: marker_shapes,},
@@ -631,8 +631,8 @@ document.getElementById('helper_pair_markers_co').addEventListener( 'click', fun
 	for(var i = 0; i < inputer_traces.length; i += 2 ){
 		inputer_traces[i].inputs.marker.symbol.elem.selectedIndex = j;
 		inputer_traces[i+1].inputs.marker.symbol.elem.selectedIndex = j+8;
-		inputer_traces[i].inputs.line.dash.elem.selectedIndex = 1;
-		inputer_traces[i+1].inputs.line.dash.elem.selectedIndex = 0;
+		inputer_traces[i].inputs.line.dash.elem.selectedIndex = 0;
+		inputer_traces[i+1].inputs.line.dash.elem.selectedIndex = 1;
 		j += 1;
 	}
 	update();

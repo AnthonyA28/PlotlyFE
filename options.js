@@ -21,7 +21,7 @@ marker_shapes : [
 line_shapes : ["solid", "dot", "dash", "longdashdot", "dashdot", "longdash" ],
 colors_palettes : {
   "pyDefault": ["#0000ff","#00ff00","#ff0000","#00ffff","#ff00ff","#ffff00", "#000000", "#0000aa","#00aa00","#aa0000","#00aaaa","#aa00aa","#aaaa00"],
-  "UTcolors":["#f8971f" ,"#ffd600","#a6cd57","#579d42","#00a9b7","#005f86","#9cadb7","#d6d2c4","#333f48"],
+  "UTcolors":[ "#005f86","#f8971f", "#ffd600","#00a9b7", "#a6cd57","#579d42","#9cadb7","#d6d2c4","#333f48"],
   "Accent" : ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666', '#7fc97f', '#beaed4', '#fdc086', '#ffff99'],
   "Paired" : ['#a6cee3', '#1f78b4', '#b2df8a', '#33a02c', '#fb9a99', '#e31a1c', '#fdbf6f', '#ff7f00', '#cab2d6', '#6a3d9a', '#ffff99', '#b15928'],
   "Dark2" : ['#1b9e77', '#d95f02', '#7570b3', '#e7298a', '#66a61e', '#e6ab02', '#a6761d', '#666666', '#1b9e77', '#d95f02', '#7570b3', '#e7298a'],
