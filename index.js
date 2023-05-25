@@ -707,11 +707,6 @@ function plot(header, data, update_nums=false){
         }
       }]
   },);
-
-
-    // Update the template text box 
-    var json_text = get_template_text().replace(/'/g, "\\'");
-    document.getElementById("template_text_box").value = json_text;
     
 };
 
@@ -1061,9 +1056,6 @@ function update(){
   var l = inputer_layout.get_data();
   Plotly.relayout(document.getElementById('gd'), l);
 
-  // Update the template text box 
-  var json_text = get_template_text().replace(/'/g, "\\'");
-  document.getElementById("template_text_box").value = json_text;
 }
 
  document.onkeypress = function (eventKeyName) {
@@ -1120,6 +1112,14 @@ document.getElementById('download').addEventListener( 'click', function(){
 });
 
 
+document.getElementById('save_template').addEventListener( 'click', function(){
+
+    var json_text = get_template_text();
+    var name_ = prompt("Enter name of template to save:");
+
+    localStorage.setItem("LocalStorage_".concat(name_), json_text);
+
+});
 
 
 
@@ -1367,6 +1367,28 @@ function change_template(){
 var dropdown = document.createElement("select");
 dropdown.id = 'template_dropdown';
 var opt = document.createElement("option");
+
+// Get the localStorage Templates 
+// Get the total number of items in localStorage
+var itemCount = localStorage.length;
+
+// Iterate through each item
+for (var i = 0; i < itemCount; i++) {
+  // Get the key at the current index
+  var key = localStorage.key(i);
+
+  // Check if the key starts with "template_"
+  if (key.startsWith("LocalStorage_")) {
+    // Retrieve the value associated with the key
+    var value = localStorage.getItem(key);
+
+    templates_list.push([key.split("_")[1], value])
+
+    // Perform your desired operations with the key and value
+    console.log("Key: " + key + ", Value: " + value);
+  }
+}
+
 
 for (let i = 0; i < templates_list.length; i++) {
   var opt = document.createElement("option");
