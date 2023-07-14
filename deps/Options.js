@@ -43,7 +43,7 @@ var OPT_inputer_layout = {
       ticks: {it: "option",options: ["inside", "outside", ""],},
       ticklen: {it: "text",def: 5,},
       // tickwidth: {it: "number",def: 1,},
-      // tickcolor: {it: "text",def: "#000000",},
+      tickcolor: {it: "text",def: "#000000",},
       // tickprefix: {it: "text", def: ""},
       // ticksuffix: {it: "text", def: ""},
       linecolor: {it: "text",def: "#000000",},
@@ -60,7 +60,7 @@ var OPT_inputer_layout = {
         ticks: {it: "option",options: ["inside", "outside", ""],},
         ticklen: {it: "number",def: 2,},
         // tickwidth: {it: "number",def: 1,},
-        // tickcolor: {it: "text",def: "#000000",},
+        tickcolor: {it: "text",def: "#000000",},
       },
     },
     yaxis: {
@@ -80,7 +80,7 @@ var OPT_inputer_layout = {
       ticks: {it: "option",options: ["inside", "outside", ""],},
       ticklen: {it: "number",def: 5,},
       // tickwidth: {it: "number",def: 1,},
-      // tickcolor: {it: "text",def: "#000000",},
+      tickcolor: {it: "text",def: "#000000",},
       // tickprefix: {it: "text", def: ""},
       // ticksuffix: {it: "text", def: ""},
       linecolor: {it: "text",def: "#000000",},
@@ -97,7 +97,7 @@ var OPT_inputer_layout = {
         ticks: {it: "option",options: ["inside", "outside", ""],},
         ticklen: {it: "number",def: 2,},
         // tickwidth: {it: "number",def: 1,},
-        // tickcolor: {it: "text",def: "#000000",},
+        tickcolor: {it: "text",def: "#000000",},
       },
     },
     margin:{
@@ -110,7 +110,7 @@ var OPT_inputer_layout = {
     font: {
         family: {it: "text",def: 'Segoe UI',},
         size: {it: "number",def: 10,},
-        // color: {it: 'text', def:'#000000'},
+        color: {it: 'text', def:'#000000'},
     },
 
     width: {it: "number",def: 313,},
