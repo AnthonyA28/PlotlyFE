@@ -1,5 +1,5 @@
 
-const ipcRenderer = require('electron').ipcRenderer; 
+
 
 class inputer {
 
@@ -279,5 +279,3 @@ class inputer {
 
   }
 }
-
-module.exports = inputer

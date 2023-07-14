@@ -3,8 +3,13 @@
 
 <script type="text/x-mathjax-config"> MathJax.Hub.Config({ "HTML-CSS": { scale: 1.3, linebreaks: { automatic: true } },SVG: { font: "STIX General" },displayAlign: "left" });</script>
 <script src="./deps/papaparse.js"></script>
-<script type="text/javascript">window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);</script>
+<script src="./deps/Inputer.js"></script>
+<script src="./deps/Options.js"></script>
+<!-- <script type="text/javascript">window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);</script> NOT SURE WHY I EVERY HAD THIS --> 
 <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
 
 <style type="text/css">
   body
@@ -37,16 +42,19 @@
     
     <div style="display: inline-block;width:350px;height:1000px;border: 1px solid #FFFFFF; vertical-align: top;">
       Open<input type="file" id="input_file">
-      <br>
-        <button type="submit" id="download" > Export json</button>
-        <button type="submit" id="save_template"> Save template </button> 
-        <button type="submit" id="open_templates"> Open templates</button> 
+      <!-- <br> -->
+        <button type="submit" id="download" > Export json</button> 
+        <button type="submit" id="save_template" > Save Template</button> 
+        <button type="submit" id="delete_template" > Delete Template</button> 
+        <button type="submit" id="make_default_template" > Make Default Template</button> 
+            <!-- <button type="submit" id="save_template"> Save template </button>  -->
+        <!-- <button type="submit" id="open_templates"> Open templates</button>  -->
         <div id="template_div"><strong>Choose Template:</strong> 
         </div>
         <div ><strong>Update:</strong>
-          Trace styles <input type="checkbox"  id="update_trace_styles_check" >
-          Trace names  <input type="checkbox"  id="update_trace_names_check" >
-          Axes labels  <input type="checkbox"  id="update_axes_labels_check" >
+          Trace styles <input type="checkbox"  id="update_trace_styles_check" checked >
+          <!-- Trace names  <input type="checkbox"  id="update_trace_names_check" >
+          Axes labels  <input type="checkbox"  id="update_axes_labels_check" > -->
         </div>
 
       <br>
@@ -90,11 +98,20 @@
       </div>
       <h3>Master Trace:</h3>
       <div id="appM"></div>
-    
-    <button type="submit" id="helper_pair_colors">helper_pair_colors</button> 
 
-    <button type="submit" id="helper_pair_markers_co">helper_pair_markers_co</button> 
+    <button type="submit" id="helper_reset_colors">Reset Colors</button> 
     
+    <button type="submit" id="helper_pair_colors">Pair Colors</button> 
+
+
+    <br>
+
+    <button type="submit" id="helper_pair_markers">Pair Markers</button> 
+
+    <button type="submit" id="helper_pair_linestyles">Pair Linestyles</button> 
+    <br>
+
+
     </div>
 
     <div style="display: inline-block;width:410px;height:410px;border: 1px solid #FFFFFF; vertical-align:  top" id="gd_div">
@@ -129,6 +146,7 @@
       <table class="tg">
       <thead>
         <tr>
+          <th class="tg-m919">Ångstrom</th>
           <th class="tg-m919">Cdot </th>
           <th class="tg-yla0">Zeta </th>
           <th class="tg-yla0">Lambda </th>
@@ -138,6 +156,7 @@
       </thead>
       <tbody>
         <tr>
+          <td class="tg-cly1">Å</td>
           <td class="tg-cly1">· </td>
           <td class="tg-cly1">ζ </td>
           <td class="tg-cly1">λ </td>
@@ -310,6 +329,7 @@
 
 
 <script >if (window.module) module = window.module;</script>
-<script type="module" src="index.js">
+<script src="templates.js"></script>
+<script src="index.js">
 </script>
 

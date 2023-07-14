@@ -1,5 +1,126 @@
-module.exports = {
-marker_shapes : [
+var OPT_inputer_layout = {
+    showlegend: {it: 'boolean', 'def': true},
+    legend: {
+      bordercolor: {it: "text",def: '#444',},
+      bgcolor: {it: "text", def:'#FFFFFF'},
+      xanchor: {it: "option", options: ["auto", "left", "center", "right"],},
+      yanchor: {it: 'option', options: ["auto", "top", "middle", "bottom"],},
+      // borderwidth: 0,
+      // tracegroupgap: 5,
+      x: {it: "number",def: 0.98,},
+      y: {it: "number",def: 0.98,},
+        margin:{
+          autoexpand: {it: 'boolean', 'def': true},
+          b: {it: "number",def: 50,},
+          l: {it: "number",def: 50,},
+          r: {it: "number",def: 100,},
+          t: {it: "number",def: 50,},
+          // pad: {it: "number",def: 0,},
+        },
+        autosize: {it: "boolen", def:true},
+      // font: {
+      //     family: {it: "text",def: 'Segoe UI',},
+      //     size: {it: "number",def: 10,},
+      //     color: {it: 'text', def:'#000000'},
+      // },
+      itemwidth: {it: "number", def: 10},
+
+    },
+
+    xaxis: 
+{      title: {
+        text: {it: "text",def: 'headerX',},
+        standoff: {it: "number",def: 0,},
+      },
+      range: {
+        it: "array", def:['',''],
+      },
+      type: {it: 'option',options: ["linear", 'log']},
+      zeroline: {it: 'boolean', 'def': false},
+      dtick:  {it: "text",def: '',},
+      // tickformat: {it: "text",def: '',}, // https://github.com/d3/d3-format/blob/main/README.md#locale_format
+      exponentformat: {it: "option",options: ["power", "none" , "e" , "E" , "SI" , "B"],},
+      ticks: {it: "option",options: ["inside", "outside", ""],},
+      ticklen: {it: "text",def: 5,},
+      // tickwidth: {it: "number",def: 1,},
+      tickcolor: {it: "text",def: "#000000",},
+      // tickprefix: {it: "text", def: ""},
+      // ticksuffix: {it: "text", def: ""},
+      linecolor: {it: "text",def: "#000000",},
+      mirror: {it: "option",options: ["false", "ticks","true" ],},
+      showgrid: {it: 'boolean', 'def': false},
+      // tickfont: {
+      //     family: {it: "text",def: 'Segoe UI',},
+      //     size: {it: "number",def: 10,},
+      //     color: {it: 'text', def:'#000000'},
+      // },
+      minor:{
+        dtick:  {it: "text",def: '',},
+        // tickmode: {it: "text",def: 'auto',},
+        ticks: {it: "option",options: ["inside", "outside", ""],},
+        ticklen: {it: "number",def: 2,},
+        // tickwidth: {it: "number",def: 1,},
+        tickcolor: {it: "text",def: "#000000",},
+      },
+    },
+    yaxis: {
+      title: {
+        text:{it: "text",def: 'headerY',},
+        standoff: {it: "number",def: 0,},
+      },
+      range: {
+        it: "array", def:['',''],
+      },
+      "type": {it: 'option',options: ["linear", 'log']},
+      zeroline: {it: 'boolean', 'def': true},
+      dtick: {it: "text",def: '',},
+      tickformat: {it: "text",def: "",}, // https://github.com/d3/d3-format/blob/main/README.md#locale_format
+      exponentformat: {it: "option", options: ["power", "none" , "e" , "E" , "SI" , "B"],},
+      tickmode: '',
+      ticks: {it: "option",options: ["inside", "outside", ""],},
+      ticklen: {it: "number",def: 5,},
+      // tickwidth: {it: "number",def: 1,},
+      tickcolor: {it: "text",def: "#000000",},
+      // tickprefix: {it: "text", def: ""},
+      // ticksuffix: {it: "text", def: ""},
+      linecolor: {it: "text",def: "#000000",},
+      mirror: {it: "option",options: ["false", "ticks","true" ],},
+      showgrid: {it: 'boolean', 'def': false},
+      // tickfont: {
+      //     family: {it: "text",def: 'Segoe UI',},
+      //     size: {it: "number",def: 10,},
+      //     color: {it: 'text', def:'#000000'},
+      // },
+      minor:{
+        dtick: {it: "text",def: '',},
+        tickmode: {it: "text",def: 'auto',},
+        ticks: {it: "option",options: ["inside", "outside", ""],},
+        ticklen: {it: "number",def: 2,},
+        // tickwidth: {it: "number",def: 1,},
+        tickcolor: {it: "text",def: "#000000",},
+      },
+    },
+    margin:{
+      b: {it: "number",def: 80,},
+      l: {it: "number",def: 35,},
+      r: {it: "number",def: 5,},
+      t: {it: "number",def: 80,},
+      // pad: {it: "number",def: 0,},
+    },
+    font: {
+        family: {it: "text",def: 'Segoe UI',},
+        size: {it: "number",def: 10,},
+        color: {it: 'text', def:'#000000'},
+    },
+
+    width: {it: "number",def: 313,},
+    height: {it: "number",def: 313,},
+    // paper_bgcolor: {it: "text",def:'#FFFFFF',},
+    // plot_bgcolor: {it: "text",def:'#FFFFFF',},
+}
+
+
+var marker_shapes = [
     "circle",
     "square",
     "diamond",
@@ -16,10 +137,11 @@ marker_shapes : [
     "triangle-down-open",
     "triangle-left-open",
     "triangle-right-open" 
- ],
+ ]
 
-line_shapes : ["solid", "dot", "dash", "longdashdot", "dashdot", "longdash" ],
-colors_palettes : {
+var line_shapes = ["solid", "dot", "dash", "longdashdot", "dashdot", "longdash" ]
+
+var colors_palettes = {
   "pyDefault": ["#0000ff","#00ff00","#ff0000","#00ffff","#ff00ff","#ffff00", "#000000", "#0000aa","#00aa00","#aa0000","#00aaaa","#aa00aa","#aaaa00"],
   "UTcolors":["#f8971f" ,"#ffd600","#a6cd57","#579d42","#00a9b7","#005f86","#9cadb7","#d6d2c4","#333f48"],
   "Accent" : ['#7fc97f', '#beaed4', '#fdc086', '#ffff99', '#386cb0', '#f0027f', '#bf5b17', '#666666', '#7fc97f', '#beaed4', '#fdc086', '#ffff99'],
@@ -188,5 +310,4 @@ colors_palettes : {
   "12_rocket_r" :['#f7cfb3', '#f6b089', '#f58f66', '#f26d4b', '#eb463e', '#d72549', '#bc1656', '#9a1b5b', '#781f59', '#591e50', '#3a1a41', '#1d112c'],
   "12_inferno" :['#0e092b', '#2d0b59', '#4f0d6c', '#6d186e', '#8d2369', '#ad305d', '#c83f4b', '#e15635', '#f2741c', '#fb9606', '#fbbc21', '#f3e35a'],
   "12_inferno_r" :['#f3e35a', '#fbbc21', '#fb9606', '#f2741c', '#e15635', '#c83f4b', '#ad305d', '#8d2369', '#6d186e', '#4f0d6c', '#2d0b59', '#0e092b'],
-}
 }
