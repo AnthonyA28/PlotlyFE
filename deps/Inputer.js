@@ -1,5 +1,5 @@
 
-const ipcRenderer = require('electron').ipcRenderer; 
+
 
 class inputer {
 
@@ -13,6 +13,7 @@ class inputer {
       button.style.marginLeft = '10px'
       button.tabIndex = "-1";
       parent.appendChild(button)
+      return button
     }
 
     if(!cur_inputs[key].hasOwnProperty('it')){
@@ -55,6 +56,68 @@ class inputer {
       cur_inputs[key]["elem"] = dropdown
       var br = document.createElement("br");
       parent.appendChild(br);
+    }else if(cur_inputs[key]['it'] == "slider"){
+      console.log("slider")
+
+      let title = make_input_title(parent, key);
+      var br = document.createElement("br");
+
+      const input = document.createElement("Input");
+      input.id = key
+      input.setAttribute("type", "range");
+      cur_inputs[key].hasOwnProperty('def');
+      input.value = cur_inputs[key]['def'];
+
+
+      title.textContent = title.textContent + " " + cur_inputs[key]['def'].toPrecision(3);
+      input.style.marginLeft = '15px';
+      input.style.width = '300px'
+      if(Object.hasOwn(cur_inputs[key], 'step')){
+        input.step = cur_inputs[key]['step']
+      }
+      if(Object.hasOwn(cur_inputs[key], 'min')){
+        input.min = cur_inputs[key]['min']
+      }
+      if(Object.hasOwn(cur_inputs[key], 'max')){
+        input.max = cur_inputs[key]['max']
+      }
+
+      const input_base = document.createElement("Input")
+      input_base.style.marginLeft = "15px"
+      input_base.style.width = "45px"
+      if(!Object.hasOwn(cur_inputs[key], "base")){
+        input_base.style = "display:none";
+      }else{
+        input.style.width = "250px"
+      }
+      input_base.id = key + "_base"
+      input_base.setAttribute("type", "number")
+      input_base.value = "1";
+      if(Object.hasOwn(cur_inputs[key], 'step')){
+        input_base.step = cur_inputs[key]['step']
+      }
+
+      let fn = function(){
+        let str = title.textContent.split(':')[0];
+        str = str + ": " + (parseFloat(input.value) * parseFloat(input_base.value)).toPrecision(3);
+        title.textContent = str
+        callback();
+      }
+      input.onchange =  fn;
+      input.oninput =  fn;
+      input_base.onchange = fn;
+      input_base.oninput = fn; 
+
+      parent.appendChild(br);
+      parent.appendChild(input_base);
+      parent.appendChild(input);
+      cur_inputs[key]["elem"]  = input
+      cur_inputs[key]["elem_base"] = input_base
+
+      // cur_inputs[key]["elem"] = input
+      var br = document.createElement("br");
+      parent.appendChild(br);
+      
     }else if(cur_inputs[key]['it'] == "number"){
       make_input_title(parent, key);
       const input = document.createElement("input");
@@ -64,6 +127,12 @@ class inputer {
       input.value = cur_inputs[key]['def'];
       input.style.marginLeft = '15px';
       input.onchange =  callback;
+      if(Object.hasOwn(cur_inputs[key], 'step')){
+        input.step = cur_inputs[key]['step']
+      }
+      if(Object.hasOwn(cur_inputs[key], 'min')){
+        input.min = cur_inputs[key]['min']
+      }
       parent.appendChild(input);
       cur_inputs[key]["elem"] = input
       var br = document.createElement("br");
@@ -125,10 +194,16 @@ class inputer {
           output[key] = {};
           iterate(cur_inputs[key], output[key]);
         }else{
+          // console.log(cur_inputs[key]['it'])
           if(cur_inputs[key]['it'] == 'boolean'){
             output[key] = cur_inputs[key]['elem'].checked;
           }else if(cur_inputs[key]['it'] == 'number'){
             output[key] = parseFloat(cur_inputs[key]['elem'].value);
+          }else if(cur_inputs[key]['it'] == 'slider'){
+            /// AJA TODO
+            // output[key] = parseFloat(cur_inputs[key]['elem'].value)*parseFloat(cur_inputs[key]['elem_base'].value);
+            // console.log("Here")
+            // console.log(output[key]);
           }else if(cur_inputs[key]['it'] == 'text'){
             output[key] = cur_inputs[key]['elem'].value;
           }else if(cur_inputs[key]['it'] == 'option'){
@@ -175,6 +250,9 @@ class inputer {
               output[key] = cur_inputs[key]['elem'].checked;
             }else if(cur_inputs[key]['it'] == 'number'){
               output[key] = parseFloat(cur_inputs[key]['elem'].value);
+            }else if(cur_inputs[key]['it'] == 'slider'){
+              // output[key] = parseFloat(cur_inputs[key]['elem'].value)*parseFloat(cur_inputs[key]['elem_base'].value);
+              // AJA todo 
             }else if(cur_inputs[key]['it'] == 'text'){
               output[key] = cur_inputs[key]['elem'].value;
             }else if(cur_inputs[key]['it'] == 'option'){
@@ -204,6 +282,9 @@ class inputer {
           if(!cur_inputs[key].hasOwnProperty('it')){
             iterate(cur_inputs[key], new_d[key]);
           }else{
+            if(cur_inputs[key]['elem'] == 'a'){
+              console.log(cur_inputs[key]['elem'])
+            }
             if(cur_inputs[key]['it'] == 'boolean'){
               cur_inputs[key]['elem'].checked = new_d[key];
             }else if(cur_inputs[key]['it'] == 'number' || cur_inputs[key]['it'] == 'text'){
@@ -279,5 +360,3 @@ class inputer {
 
   }
 }
-
-module.exports = inputer

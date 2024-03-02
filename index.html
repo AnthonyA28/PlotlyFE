@@ -1,12 +1,24 @@
+<!-- ---
+title: Plotter
+tags: Tools
+---
+
+{% include head.html %}
+ -->
 <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
 <script type="text/x-mathjax-config"> MathJax.Hub.Config({ "HTML-CSS": { scale: 1.3, linebreaks: { automatic: true } },SVG: { font: "STIX General" },displayAlign: "left" });</script>
-<script src="./deps/papaparse.js"></script>
-<script type="text/javascript">window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);</script>
+<script src="deps/papaparse.js"></script>
+<script src="deps/Inputer.js"></script>
+<script src="deps/Options.js"></script>
+<!-- <script type="text/javascript">window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+000A'||e.keyIdentifier=='Enter'||e.keyCode==13){if(e.target.nodeName=='INPUT'&&e.target.type=='text'){e.preventDefault();return false;}}},true);</script> NOT SURE WHY I EVERY HAD THIS --> 
 <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 
+
 <style type="text/css">
+
+
   body
   {
     font-size: 13px;
@@ -29,61 +41,67 @@
   }
 </style>
 
-
 <main class="content-wraper" id="content-wraper">
 
   <div id="wrapper" style="border: 1px solid #FFFFFF">
 
+
     
-    <div style="display: inline-block;width:350px;height:1000px;border: 1px solid #FFFFFF; vertical-align: top;">
-      Open<input type="file" id="input_file">
-      <br>
-        <button type="submit" id="download" > Export json</button>
-        <button type="submit" id="save_template"> Save template </button> 
+    <div style="display: inline-block;width:350px;height:2000px;border: 1px solid #FFFFFF; vertical-align: top;">
+      <h3>
+          <a href="//assets/plotter/assets/PlotterTutorial.html">Help/Documentation</a>
+          <br>
+      </h3>
+
+
+      
+      <!-- <br> -->
+            <!-- <button type="submit" id="save_template"> Save template </button>  -->
+        <!-- <button type="submit" id="open_templates"> Open templates</button>  -->
+
+          
+        <div id="template_div"><strong>Choose Template:</strong> </div>
+        <button type="submit" id="save_template" > Save Template</button> 
+        <button type="submit" id="delete_template" > Delete Template</button> 
         <button type="submit" id="open_templates"> Open templates</button> 
-        <div id="template_div"><strong>Choose Template:</strong> 
-        </div>
+        
+
+        
+        <br>
+        <br>
+
         <div ><strong>Update:</strong>
-          Trace styles <input type="checkbox"  id="update_trace_styles_check" >
-          Trace names  <input type="checkbox"  id="update_trace_names_check" >
-          Axes labels  <input type="checkbox"  id="update_axes_labels_check" >
+          <div style="margin-left: 20px;">
+          Ignore Zoom  <input type="checkbox"  id="ignore_zoom_check" checked>
+          <br>          
+          Line styles <input type="checkbox"  id="update_trace_styles_check" checked >
+          <p style="display: none;"> <br> Names  <input type="checkbox"  id="update_trace_names_check" > </p>
+            <br>
+          Axes<input type="checkbox"  id="update_axes_labels_check">
+            <br>
+          Size only <input type="checkbox" id="update_size_only_check" >
+          </div>
         </div>
 
       <br>
+      <strong>Palette:</strong>
       <select id="palettes">
-
-        <option>pyDefault</option>
         <option>UTcolors</option>
+        <option>pyDefault</option>
         <option>Paired</option>
         <option>Dark2</option>
         <option>Pastel1</option>
-        <option>Pastel2</option>
         <option>Set1</option>
-        <option>Set2</option>
-        <option>Set3</option>
         <option>tab10</option>
-        <option>tab20</option>
-        <option>tab20b</option>
-        <option>tab20c</option>
-
+        
         <option>viridis_</option>
         <option>viridis_r_</option>
         <option>magma_</option>
         <option>magma_r_</option>
-        <option>plasma_</option>
-        <option>plasma_r_</option>
-        <option>cividis_</option>
-        <option>cividis_r_</option>
-        <option>mako_</option>
-        <option>mako_r_</option>
-        <option>rocket_</option>
-        <option>rocket_r_</option>
-        <option>inferno_</option>
-        <option>inferno_r_</option>
-
       </select>
       <input type="number" style="width:50px;" id="n_colors"> n_colors </input>
-
+      <br>
+      <h3>Use error bars: <input type="checkbox" id="error_bars" ></h3>
       <h3>Layout:</h3>
       <div id="layout">
         <div id="app" ></div>
@@ -91,24 +109,69 @@
       <h3>Master Trace:</h3>
       <div id="appM"></div>
 
-    <button type="submit" id="helper_reset_colors">helper_reset_colors</button> 
-    
-    <button type="submit" id="helper_pair_colors">helper_pair_colors</button> 
 
-    <button type="submit" id="helper_pair_markers_co">helper_pair_markers_co</button> 
-
+        <h4 >Figure Sizes:</h4>
+          <div style="margin-left:15px;">
+          Typically images are rendered at 96 pixels per inch. So a 100x100 px  image will be in actual size 1.042 x 1.042 in  26.458 x 26.458 mm.
+          <br>
+          A typical small figure size is 3.35 in (8.5 cm, 321px) wide. 
+          <br>
+          A typical large figure size is 6.7 in (17 cm, 642 px) wide.  
+          </div>
+        <h4>Equations and Special Characters:</h4>
+          <div style="margin-left:15px;">
+          Special characters and mathematial equations can be written with Latex formatting. 
+          Just surround the text with dollar signs for the text to be treated as Latex. 
+          <br>
+          Alternatively, Using HTML markdown style is suitable for simple subscript and superscripts. The benefit to this, is that it will  retain the your font. 
+          <br> 
+          As an example, subscripts are achieved with x&lt;sub&gt;2&lt;/sub&gt; which will result in x<sub>2</sub>, but will render as $x_2$ in Latex.
+          Superscripts are as follows: x&lt;sup&gt;2&lt;/sup&gt; and will result in x<sup>2</sup> which is the equivalent to $x^2$ in Latex.
+          </div>
     
     </div>
 
-    <div style="display: inline-block;width:410px;height:410px;border: 1px solid #FFFFFF; vertical-align:  top" id="gd_div">
+    <div style="display: inline-block;width:410px;height:410px;border: 1px solid #FFFFFF; vertical-align:  top ; margin-top: 25px" id="gd_div">
+
+      <input type="file" id="input_file" style="color: transparent;font-size: 28px; margin-bottom: 25px; margin-left: 5px; margin-top: 5px" >
+
+
       <div id="gd" ></div>
+      <br>
+
+
+    <button type="submit" id="helper_reset_colors">Reset Colors</button>
+
+    <button type="submit" id="helper_reset_markers">Reset Markers</button> 
+
+    <button type="submit" id="helper_reset_linestyles">Reset Linestyles</button> 
+    
+    <br> 
+    
+    <button type="submit" id="helper_pair_colors">Pair Colors</button> 
+
+    <button type="submit" id="helper_pair_markers">Pair Markers</button> 
+
+    <button type="submit" id="helper_pair_linestyles">Pair Linestyles</button> 
+
+    <br>
+
+    <button type="submit" id="helper_save_current_zoom">Save current range/domain</button> 
+    
+    <br>
+
+    <button type="submit" id="exportData">Export Data</button> 
+
+    <br>
+
+
     </div>
 
     <div style="display: inline-block;width:350px;height:1000px;border: 1px solid #FFFFFF; vertical-align: top;">
 
       <!-- Data -->
       <div id="data">
-        Data:
+        <h3>Data:</h3>  
       </div>
     </div>
 
@@ -129,180 +192,7 @@
       .tg .tg-yla0{font-weight:bold;text-align:left;vertical-align:middle}
       .tg .tg-0lax{text-align:left;vertical-align:top}
       </style>
-      <table class="tg">
-      <thead>
-        <tr>
-          <th class="tg-m919">Cdot </th>
-          <th class="tg-yla0">Zeta </th>
-          <th class="tg-yla0">Lambda </th>
-          <th class="tg-yla0">Sigma </th>
-          <th class="tg-yla0">Phi </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="tg-cly1">· </td>
-          <td class="tg-cly1">ζ </td>
-          <td class="tg-cly1">λ </td>
-          <td class="tg-cly1">σ </td>
-          <td class="tg-cly1">φ </td>
-        </tr>
-        <tr>
-          <td class="tg-yla0">Alpha </td>
-          <td class="tg-cly1">Ζ </td>
-          <td class="tg-cly1">Λ </td>
-          <td class="tg-cly1">ς </td>
-          <td class="tg-cly1">ϕ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">α </td>
-          <td class="tg-1wig">Eta </td>
-          <td class="tg-yla0">Mu </td>
-          <td class="tg-cly1">ϲ </td>
-          <td class="tg-cly1">Φ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">ά </td>
-          <td class="tg-1wig">η </td>
-          <td class="tg-cly1">μ </td>
-          <td class="tg-cly1">ͻ </td>
-          <td class="tg-yla0">Chi </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Α </td>
-          <td class="tg-0lax">ή </td>
-          <td class="tg-cly1">Μ </td>
-          <td class="tg-cly1">ͼ </td>
-          <td class="tg-cly1">χ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Ά </td>
-          <td class="tg-0lax">Η </td>
-          <td class="tg-cly1">Nu </td>
-          <td class="tg-cly1">ͽ </td>
-          <td class="tg-cly1">Χ </td>
-        </tr>
-        <tr>
-          <td class="tg-yla0">Beta </td>
-          <td class="tg-0lax">Ή </td>
-          <td class="tg-cly1">ν </td>
-          <td class="tg-cly1">Σ </td>
-          <td class="tg-yla0">Psi </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">β </td>
-          <td class="tg-1wig">Theta </td>
-          <td class="tg-cly1">Ν </td>
-          <td class="tg-cly1">Ϲ </td>
-          <td class="tg-cly1">ψ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">ϐ </td>
-          <td class="tg-1wig">θ </td>
-          <td class="tg-1wig">Xi </td>
-          <td class="tg-cly1">Ͻ </td>
-          <td class="tg-cly1">Ψ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Β </td>
-          <td class="tg-0lax">ϑ </td>
-          <td class="tg-1wig">ξ </td>
-          <td class="tg-cly1">Ͼ </td>
-          <td class="tg-yla0">Omega </td>
-        </tr>
-        <tr>
-          <td class="tg-yla0">Gamma </td>
-          <td class="tg-0lax">Θ </td>
-          <td class="tg-0lax">Ξ </td>
-          <td class="tg-cly1">Ͽ </td>
-          <td class="tg-cly1">ω </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">γ </td>
-          <td class="tg-0lax">ϴ </td>
-          <td class="tg-1wig">Omicron </td>
-          <td class="tg-1wig">Tau </td>
-          <td class="tg-cly1">ώ </td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Γ </td>
-          <td class="tg-1wig">Iota </td>
-          <td class="tg-1wig">ο </td>
-          <td class="tg-0lax">τ </td>
-          <td class="tg-cly1">Ω </td>
-        </tr>
-        <tr>
-          <td class="tg-yla0">Delta </td>
-          <td class="tg-1wig">ι </td>
-          <td class="tg-0lax">ό </td>
-          <td class="tg-0lax">Τ </td>
-          <td class="tg-cly1">Ώ</td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">δ </td>
-          <td class="tg-0lax">ί </td>
-          <td class="tg-0lax">Ο </td>
-          <td class="tg-1wig">Upsilon </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Δ </td>
-          <td class="tg-0lax">ϊ </td>
-          <td class="tg-0lax">Ό </td>
-          <td class="tg-0lax">υ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-yla0">Epsilon </td>
-          <td class="tg-0lax">ΐ </td>
-          <td class="tg-0lax">Pi </td>
-          <td class="tg-0lax">ϋ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">ε </td>
-          <td class="tg-0lax">Ι </td>
-          <td class="tg-0lax">π </td>
-          <td class="tg-0lax">ύ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">έ </td>
-          <td class="tg-0lax">Ϊ </td>
-          <td class="tg-0lax">ϖ </td>
-          <td class="tg-0lax">ΰ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">ϵ </td>
-          <td class="tg-0lax">Ί </td>
-          <td class="tg-0lax">Π </td>
-          <td class="tg-0lax">ϒ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">϶ </td>
-          <td class="tg-1wig">Kappa </td>
-          <td class="tg-1wig">Rho </td>
-          <td class="tg-0lax">Υ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Ε </td>
-          <td class="tg-0lax">κ </td>
-          <td class="tg-0lax">ρ </td>
-          <td class="tg-0lax">Ϋ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-        <tr>
-          <td class="tg-cly1">Έ </td>
-          <td class="tg-0lax">Κ </td>
-          <td class="tg-0lax">Ρ </td>
-          <td class="tg-0lax">Ύ </td>
-          <td class="tg-0lax"></td>
-        </tr>
-      </tbody>
-      </table>
+            <table><thead> <tr> <th>Name</th> <th>Unicode</th></tr></thead><tbody> <tr> <td>Ångstrom</td> <td>Å</td></tr> <tr> <td>Alpha</td> <td>α</td></tr> <tr> <td>Beta</td> <td>β</td></tr> <tr> <td>Gamma</td> <td>γ, Γ</td></tr> <tr> <td>Delta</td> <td>δ, Δ</td></tr> <tr> <td>Epsilon</td> <td>ε, ϵ</td></tr> <tr> <td>Eta</td> <td>η</td></tr> <tr> <td>Theta</td> <td>θ, ϴ</td></tr> <tr> <td>Iota</td> <td>ι</td></tr> <tr> <td>Kappa</td> <td>κ, Κ</td></tr> <tr> <td>Zeta</td> <td>ζ, Λ</td></tr> <tr> <td>Mu</td> <td>μ</td></tr> <tr> <td>Nu</td> <td>ν</td></tr> <tr> <td>Xi</td> <td>ξ</td></tr> <tr> <td>Omicron</td> <td>ο</td></tr> <tr> <td>Pi</td> <td>π, Π</td></tr> <tr> <td>Rho</td> <td>ρ</td></tr> <tr> <td>Lambda</td> <td>λ, Σ</td></tr> <tr> <td>Tau</td> <td>τ</td></tr> <tr> <td>Upsilon</td> <td>υ</td></tr> <tr> <td>Sigma</td> <td>σ</td></tr> <tr> <td>Chi</td> <td>χ</td></tr> <tr> <td>Psi</td> <td>ψ</td></tr> <tr> <td>Omega</td> <td>ω, Ω</td></tr> <tr> <td>Phi</td> <td>φ, Φ</td></tr> <tr> <td>Cdot</td> <td>⋅</td></tr></tbody></table>
     </div>
   </div>
 
@@ -311,8 +201,8 @@
 </main>
 
 
-
 <script >if (window.module) module = window.module;</script>
-<script type="module" src="index.js">
+<script src="templates.js"></script>
+<script src="index.js">
 </script>
 

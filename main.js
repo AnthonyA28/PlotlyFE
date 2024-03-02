@@ -31,7 +31,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
   width : 1000,
   height: 600,
-  icon:".\\libs\\icon.png",
+  icon:".\\deps\\icon.png",
   frame: true,
   webPreferences: {
       webSecurity: false,
@@ -128,8 +128,27 @@ ipcMain.on("open_templates", function(event, arg){
   shell.openPath(app.getPath('userData'));
 })
 
-ipcMain.on("save_template", function(event, arg){
+ipcMain.on("delete_template", function(event, arg){
+    var filePath = path.join(app.getPath('userData'), arg)
+    console.log("delete_template:", arg);
+    console.log(app.getPath('userData'));
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        // Attempt to delete the file
+        try {
+            fs.unlinkSync(filePath);
+            console.log('File deleted successfully.');
+            event.sender.send("template_deleted", arg);
+        } catch (err) {
+            console.log('error deleting file:', err);
+        }
+    } else {
+        console.log('File does not exist:', filePath);
+    }
+});
+  
 
+ipcMain.on("save_template", function(event, arg){
   prompt({
       title: 'template name',
       label: 'name:',
@@ -271,9 +290,3 @@ ipcMain.on("load_file", function(event, arg){
       })();
   }
 });
-
-
-
-
-
- 
