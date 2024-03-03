@@ -24,3 +24,6 @@ Issue of "GPU process isn't usable. Goodbye." is solved by adding to main.js
 app.commandLine.appendSwitch('in-process-gpu');
 ```
 
+
+V1.0.0 release is available at https://drive.google.com/file/d/1lBnoS_8cQJSsl7EijTpWjktdtfb-F2mE/view?usp=drive_link
+
