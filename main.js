@@ -91,7 +91,10 @@ app.on('window-all-closed', function () {
 
 
 ipcMain.on("get_templates", function(event, arg){
-  var dir = path.normalize(app.getPath('userData'));
+  var dir = path.normalize(path.join(app.getPath('userData'),"_Templates"));
+  if(!fs.existsSync(dir)){
+    fs.mkdirSync(dir, { recursive: true });
+  }
   console.log("dir ", dir);
   var templates = [];
   fs.readdir(dir, (err, files) => {
@@ -108,9 +111,29 @@ ipcMain.on("get_templates", function(event, arg){
   get_templ_from_name(event, "default.json");
 });
 
+
+ipcMain.on("get_archived_plots", function(event, arg){
+  var dir = path.normalize(path.join(app.getPath('userData'),"_ArchivedPlots"));
+  if(!fs.existsSync(dir)){
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  console.log("dir ", dir);
+  var archived_list = [];
+  fs.readdir(dir, (err, files) => {
+    files.forEach(file => {
+      if(file.endsWith(".svg")){
+        console.log(file);
+        archived_list.push(file);
+      }
+    });
+    console.log(archived_list);
+    event.sender.send('available_plots', archived_list);   
+  });
+});
+
+
 function get_templ_from_name(event,arg){
-  var dir = app.getPath('userData');
-  var file_path  = path.join(dir,arg);
+  var file_path  = path.join(app.getPath('userData'),"_Templates", arg);
   console.log("Loading ", path.normalize(file_path)); 
   fs.readFile(file_path, {encoding: 'utf-8'}, function(err,data){
     if (!err) {
@@ -121,15 +144,29 @@ function get_templ_from_name(event,arg){
     }
   });
 }
-
 ipcMain.on("get_template_from_name", get_templ_from_name);
 
+function get_archiveplot_from_name(event,arg){
+  var file_path  = path.join(app.getPath('userData'),"_ArchivedPlots", arg);
+  console.log("Loading ", path.normalize(file_path)); 
+  fs.readFile(file_path, {encoding: 'utf-8'}, function(err,data){
+    if (!err) {
+        console.log('received data: ' + data);
+        event.sender.send('load_ArchivedPlots', data); 
+    } else {
+        console.log(err);
+    }
+  });
+}
+ipcMain.on("get_archiveplot_from_name", get_archiveplot_from_name);
+
+
 ipcMain.on("open_templates", function(event, arg){
-  shell.openPath(app.getPath('userData'));
+  shell.openPath(path.join(app.getPath('userData'), "_Templates"));
 })
 
 ipcMain.on("delete_template", function(event, arg){
-    var filePath = path.join(app.getPath('userData'), arg)
+    var filePath = path.join(app.getPath('userData'),"_Templates", arg)
     console.log("delete_template:", arg);
     console.log(app.getPath('userData'));
     // Check if the file exists
@@ -162,30 +199,30 @@ ipcMain.on("save_template", function(event, arg){
       if(r === null) {
           console.log('user cancelled');
       } else {
-          console.log("save_template:", arg);
-          console.log(app.getPath('userData'));
-          var savename = path.join(app.getPath('userData'), r.concat(".json"))
-          console.log(savename);
+          var savename = path.join(app.getPath('userData'),"_Templates", r.concat(".json"))
           fs.writeFile(savename, arg, function (err) {
           if (err) return console.log(err);
-            console.log('saved template');
             event.sender.send("template_saved", r.concat(".json"));
           });
       }
   })
   .catch(console.error);
-
-
-  // fs.writeFile(savename, arg.template);
 });
+
+ipcMain.on("archive_plot", function(event, arg){
+    var dir = path.normalize(path.join(app.getPath('userData'),"_ArchivedPlots"));
+    var savename = path.join(dir, arg[1])
+    fs.writeFile(savename, arg[0], function (err) {
+      console.log("_ArchivedPlots: ", savename)
+    });
+
+});
+
 
 
 ipcMain.on("load_file", function(event, arg){
    event.sender.send("btnclick-task-finished", "yes"); 
-   console.log("btn click from main.js")
-   // get_file();
-   var name = arg
-
+  var name = arg
   if( name.endsWith(".csv") ){
       try {
         const data = fs.readFileSync(arg, 'utf8').toString() // convert Buffer to string
@@ -229,10 +266,10 @@ ipcMain.on("load_file", function(event, arg){
       })();
   }else if( name.endsWith(".xlsx") ){
     var header = []
-      const wb = XLSX.readFile(name);
-      const sheet = wb.Sheets[wb.SheetNames[0]]
-      console.log(sheet);
-      for(var n =0; n < 25; n ++ ) {
+    const wb = XLSX.readFile(name);
+    const sheet = wb.Sheets[wb.SheetNames[0]]
+    console.log(sheet);
+    for(var n =0; n < 51; n ++ ) {
         var cell = String.fromCharCode(65 + n);
         if( sheet[cell.concat("1")] == undefined){
           header.push('');
@@ -240,7 +277,7 @@ ipcMain.on("load_file", function(event, arg){
           header.push(sheet[cell.concat("1")].v)
         }
       }
-        console.log(header) 
+      console.log(header) 
       var obj = xlsx.parse(name); // parses a file
       console.log(obj)
       console.log(obj[0]['data'])
@@ -265,7 +302,7 @@ ipcMain.on("load_file", function(event, arg){
                   const wb = XLSX.readFile(name);
                   const sheet = wb.Sheets[wb.SheetNames[0]]
                   console.log(sheet);
-                  for(var n =0; n < 25; n ++ ) {
+                  for(var n =0; n < 51; n ++ ) {
                     var cell = String.fromCharCode(65 + n);
                     if( sheet[cell.concat("1")] == undefined){
                       header.push('');

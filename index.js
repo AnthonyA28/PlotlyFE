@@ -335,7 +335,7 @@ function save_plot(type){
             plot.data[i].type = 'scatter';
         }
     }
-	Plotly.redraw(plot);
+	 Plotly.redraw(plot);
 
 
     var svgContent = plot.querySelector('svg').cloneNode(true);
@@ -362,17 +362,43 @@ function save_plot(type){
         element.remove();
       });
     });
-
-
+    
     var svgData = new XMLSerializer().serializeToString(svgContent);
+    // Replace all occurrences of vector-effect:non-scaling-stroke with an empty string
+    //vector-effect:non-scaling-stroke
+    svgData = svgData.replace(/vector-effect:\s*non-scaling-stroke;/g, '');
+
     var svgBlob = new Blob([svgData], { type: 'image/svg+xml' });
 
     var downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(svgBlob);
     downloadLink.download = filename + ".svg";
 
+    const currentDate = new Date(); const year = currentDate.getFullYear(); const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); const day = currentDate.getDate().toString().padStart(2, '0'); const hour = currentDate.getHours().toString().padStart(2, '0'); const minute = currentDate.getMinutes().toString().padStart(2, '0');
+    const currentDateTimeString = `${year}-${month}-${day}--${hour}-${minute}`;
+    
+    console.log(currentDateTimeString);
+
+    const svgName = currentDateTimeString.concat("_").concat(filename).concat(".svg")
+    ipcRenderer.send("archive_plot", [svgData, svgName]);
+    var dropdown = document.getElementById("archive_dropdown");
+    var opt = document.createElement("option");
+    opt.text = svgName;
+    dropdown.options.add(opt);  
+
     downloadLink.click();
     URL.revokeObjectURL(downloadLink.href);
+
+
+    // Lets convert back to scattergl
+    var plot = document.getElementById('gd');
+    for (let i = 0; i < plot.data.length; i++) {
+        if (plot.data[i].type === 'scatter') {
+            plot.data[i].type = 'scattergl';
+        }
+    }
+   Plotly.redraw(plot);
+
 
 
     // filename = filename
@@ -811,6 +837,18 @@ function change_template(){
 	ipcRenderer.send("get_template_from_name", template_name);
 }
 
+function plot_archived(){
+  console.log("plotting archived");
+  var index = document.getElementById('archive_dropdown').selectedIndex
+  var plot_name = document.getElementById('archive_dropdown').options[index].innerText;
+  console.log(plot_name);
+  ipcRenderer.send("get_archiveplot_from_name", plot_name);
+}
+
+ipcRenderer.on("load_ArchivedPlots", function(event, arg){
+  import_svg(arg, true, true, true, true)
+});
+
 ipcRenderer.on("load_templ", function(event, arg){
 	var update_trace_styles = document.getElementById("update_trace_styles_check").checked;
 	var update_trace_names = document.getElementById("update_trace_names_check").checked;
@@ -846,6 +884,24 @@ ipcRenderer.on('available_templates', function(event, arg){
 	}
 
 });
+
+
+ipcRenderer.send("get_archived_plots");
+ipcRenderer.on('available_plots', function(event, arg){
+  console.log(event, arg);
+  var dropdown = document.createElement("select");
+  dropdown.id = 'archive_dropdown';
+  var opt = document.createElement("option");
+
+  for(var i=0;i<arg.length;i++){
+    var opt = document.createElement("option");
+    opt.text = arg[i];
+    dropdown.options.add(opt);
+  }
+  dropdown.onchange =  plot_archived;
+  document.getElementById("archive_div").appendChild(dropdown);
+});
+
 
 
 document.getElementById('save_template').addEventListener( 'click', function(){
