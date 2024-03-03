@@ -311,6 +311,8 @@ function input_csv(selectedFile) {
 
 function save_plot(type){
 
+
+
   
   filename = filename.replace('.csv', '');
   filename = filename.replace('.json', '');
@@ -326,7 +328,16 @@ function save_plot(type){
   }
   if( type == "svg"){
 
+  	// scattergl does not seem to save properly.... But it is FAST rendering!
     var plot = document.getElementById('gd');
+    for (let i = 0; i < plot.data.length; i++) {
+        if (plot.data[i].type === 'scattergl') {
+            plot.data[i].type = 'scatter';
+        }
+    }
+	Plotly.redraw(plot);
+
+
     var svgContent = plot.querySelector('svg').cloneNode(true);
 
     var legend = plot.querySelector('.legend');
@@ -590,10 +601,7 @@ function get_template_text(curZoom=false){
     traces[i].name = traces[i].name.replace(/\s/g,' ');
     traces[i].name = encodeURIComponent(traces[i].name)
   }
-  if ( !filename.endsWith(".json")){
-    filename = filename.concat(".json")
-  }
-
+  
   var layout = inputer_layout.get_data();
 
   if(curZoom){
@@ -839,12 +847,12 @@ ipcRenderer.on('available_templates', function(event, arg){
 
 });
 
+
 document.getElementById('save_template').addEventListener( 'click', function(){
 		console.log("Save template");
 		// var template = Plotly.makeTemplate(document.getElementById("gd"));
 		var template = get_template_text();
 		ipcRenderer.send("save_template", template);
-	
 });
 ipcRenderer.on("template_saved", function(event, arg){
 	console.log(event, arg);
