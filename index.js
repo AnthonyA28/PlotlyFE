@@ -601,6 +601,7 @@ function update(){
             visible: true,
             thickness: traces[i].line.width,
             width: traces[i].line.width*2,
+            color: traces[i].marker.color, 
           }
         // traces[i+1].dontupdate = true
         inputer_traces[i+1].inputs.visible.elem.selectedIndex = 1 
