@@ -498,6 +498,8 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
   }
   l.xaxis.title.text  = decodeURIComponent(l.xaxis.title.text);
   l.yaxis.title.text  = decodeURIComponent(l.yaxis.title.text);
+  l.yaxis2.title.text  = decodeURIComponent(l.yaxis2.title.text);
+  
   if(prev_data.length > 0 ){
     if( !update_axes_labels ){
       l.xaxis.title.text  = prevLayout.xaxis.title.text
@@ -579,9 +581,12 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
 
 function update(){
 
+  set_y2_color();
+
   var plot = document.getElementById('gd');
   var xaxisRange = plot.layout.xaxis.range;
   var yaxisRange = plot.layout.yaxis.range;
+  var y2axisRange = plot.layout.yaxis2.range;
 
 
 
@@ -615,6 +620,7 @@ function update(){
   if(document.getElementById("ignore_zoom_check").checked){
     l.xaxis.range = xaxisRange
     l.yaxis.range = yaxisRange
+    l.yaxis2.range = y2axisRange
   }
 
 
@@ -637,10 +643,15 @@ function get_template_text(curZoom=false){
     var plot = document.getElementById('gd');
     layout.xaxis.range = plot.layout.xaxis.range;
     layout.yaxis.range = plot.layout.yaxis.range;
+
+    layout.yaxis2.range = plot.layout.yaxis2.range;
   }
 
   layout.xaxis.title.text  = encodeURIComponent(layout.xaxis.title.text);
   layout.yaxis.title.text  = encodeURIComponent(layout.yaxis.title.text);
+  layout.yaxis2.title.text  = encodeURIComponent(layout.yaxis2.title.text);
+
+
   var index = document.getElementById("palettes").selectedIndex
   var palette = document.getElementById("palettes").options[index].innerText;
   if(palette.endsWith("_")){
@@ -740,6 +751,26 @@ document.getElementById('helper_pair_linestyles').addEventListener( 'click', fun
 });
 
 
+document.getElementById('helper_set_y2_color').addEventListener( 'change',  function(){set_y2_color(); update();});
+  
+
+function set_y2_color(){
+    if(document.getElementById('helper_set_y2_color').checked == false){
+      return;
+    }
+    for(var i = 0; i < inputer_traces.length; i += 1 ){
+    var axis = inputer_traces[i].inputs.yaxis.elem[inputer_traces[i].inputs.yaxis.elem.selectedIndex].text
+    if(axis == "y2"){
+      var color = inputer_traces[i].inputs.marker.color.elem[inputer_traces[i].inputs.marker.color.elem.selectedIndex].text
+      var layout = inputer_layout.get_data();
+      layout.yaxis2.tickcolor = color
+      layout.yaxis2.linecolor = color
+      layout.yaxis2.tickfont.color = color
+      layout.yaxis2.title.font.color = color
+      inputer_layout.update_data(layout);
+    }
+  }
+}
 
 
 
@@ -988,9 +1019,18 @@ document.getElementById('helper_save_current_zoom').addEventListener('click', fu
   
   var plot = document.getElementById('gd');
   var layout = inputer_layout.get_data();
+  
   layout.xaxis.range = plot.layout.xaxis.range
   layout.yaxis.range = plot.layout.yaxis.range
+
+  layout.yaxis2.range = plot.layout.yaxis2.range
+
   inputer_layout.update_data(layout);
+
+
+  
+
+ 
 })
 
 
