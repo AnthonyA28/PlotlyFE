@@ -32,6 +32,8 @@ var OPT_inputer_layout = {
         text: {it: "text",def: 'headerX',},
         standoff: {it: "number",def: 0,},
       },
+      // overlaying: {it: "option",options: ['y', 'free']},
+      // side: {it: 'option',options: ["right", 'left']},
       range: {
         it: "array", def:['',''],
       },
@@ -68,6 +70,44 @@ var OPT_inputer_layout = {
         text:{it: "text",def: 'headerY',},
         standoff: {it: "number",def: 0,},
       },
+      range: {
+        it: "array", def:['',''],
+      },
+      "type": {it: 'option',options: ["linear", 'log']},
+      zeroline: {it: 'boolean', 'def': true},
+      dtick: {it: "text",def: '',},
+      tickformat: {it: "text",def: "",}, // https://github.com/d3/d3-format/blob/main/README.md#locale_format
+      exponentformat: {it: "option", options: ["power", "none" , "e" , "E" , "SI" , "B"],},
+      ticks: {it: "option",options: ["inside", "outside", ""],},
+      ticklen: {it: "number",def: 5,},
+      // tickwidth: {it: "number",def: 1,},
+      tickcolor: {it: "text",def: "#000000",},
+      // tickprefix: {it: "text", def: ""},
+      // ticksuffix: {it: "text", def: ""},
+      linecolor: {it: "text",def: "#000000",},
+      mirror: {it: "option",options: ["false", "ticks","true" ],},
+      showgrid: {it: 'boolean', 'def': false},
+      // tickfont: {
+      //     family: {it: "text",def: 'Segoe UI',},
+      //     size: {it: "number",def: 10,},
+      //     color: {it: 'text', def:'#000000'},
+      // },
+      minor:{
+        dtick: {it: "text",def: '',},
+        // tickmode: {it: "text",def: 'auto',},
+        ticks: {it: "option",options: ["inside", "outside", ""],},
+        ticklen: {it: "number",def: 2,},
+        // tickwidth: {it: "number",def: 1,},
+        tickcolor: {it: "text",def: "#000000",},
+      },
+    },
+    yaxis2: {
+      title: {
+        text:{it: "text",def: 'headerY',},
+        standoff: {it: "number",def: 25,},
+      },
+      overlaying: {it: "option",options: ['y', 'free']},
+      side: {it: 'option',options: ["right", 'left']},
       range: {
         it: "array", def:['',''],
       },

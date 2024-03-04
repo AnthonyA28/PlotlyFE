@@ -55,6 +55,7 @@ function make_trace_boxes(){
     inputer_traces.push(new inputer(div.id, {
       name: {it: "text", def: "",},
       visible: {it: "option", options: ['true' , 'false' , "legendonly" ]},
+      yaxis: {it: "option", options: ['y' , 'y2']},
       line: {
         width: {it: "number", def: default_line_width,},
         shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
@@ -88,6 +89,7 @@ function make_trace_boxes(){
 
 var inputer_master_trace = new inputer("appM", {
     type: {it: "option", options: ["scattergl", 'bar']},
+    yaxis: {it: "option", options: ['y' , 'y2']},
     line: {
       width: {it: "number", def: default_line_width,},
       shape: {it: "option", options: ["spline", "linear", "hv", "vh", "hvh", "vhv"],},
@@ -213,6 +215,7 @@ function plot(header, data, update_nums=false){
           name: headers[j],
           type: 'scattergl',
           mode: 'lines+markers',
+          yaxis: "y",
           marker: {
               size: default_marker_size,
               symbol: marker_shape,
@@ -542,11 +545,11 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
     
   }
 
-  var l = inputer_layout.get_data()
-  l.modebar = {}
-  l.modebar.orientation = "v"
+  var la = inputer_layout.get_data()
+  la.modebar = {}
+  la.modebar.orientation = "v"
 
-  Plotly.newPlot(document.getElementById('gd'), traces, l, {
+  Plotly.newPlot(document.getElementById('gd'), traces, la, {
     modeBarButtonsToRemove: ['toImage', 'sendDataToCloud' ],
     modeBarButtonsToAdd: [
 
