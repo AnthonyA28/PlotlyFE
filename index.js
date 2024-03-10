@@ -5,6 +5,40 @@ var inputer_traces = [];
 
 const {ipcRenderer}       = require('electron');
 
+function movingAverage(x, y, dx) {
+    var newx = [x[0]];
+    var newy = [y[0]];
+    var i = 0;
+    while (i < x.length - 1) {
+        var j = i + 1;
+        var sum_y = y[i + 1]; // Initialize sum_y with the next element of y
+        while (j < x.length - 1 && x[j] - x[i] < dx) {
+            sum_y += y[j + 1]; // Update sum_y with the next element of y
+            j++;
+        }
+        var avg = sum_y / (j - i); // Calculate average
+        i = j;
+        newx.push(x[j]);
+        newy.push(avg);
+    }
+    return [newx, newy];
+}
+
+var n_data_lim = 1000
+function downSample(data){
+  for(var i = 0; i< data.length; i +=1) {
+    if(data[i].x.length > n_data_lim){
+      console.log("Original  size: " , data[i].x.length)
+      var scale_fac  = (data[i].x.length/n_data_lim)
+      var dx = ((data[i].x[data[i].x.length-1]-data[i].x[0])/data[i].x.length)*scale_fac
+      result = movingAverage(data[i].x, data[i].y, dx)
+      data[i].x = result[0]
+      data[i].y = result[1]    
+      console.log("Downsampled size: " , data[i].x.length)
+    }
+  }
+  return data
+}
 
 var log10 = function (y) {
   return Math.log(y) / Math.log(10);
@@ -256,6 +290,7 @@ function plot(header, data, update_nums=false){
   document.getElementById("palettes").dispatchEvent(new Event('change')); // Force the inputer_traces color options box to update color 
 
 
+  traces = downSample(traces)
   Plotly.newPlot(document.getElementById('gd'), traces, inputer_layout.get_data(), {
       
       modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
@@ -348,7 +383,7 @@ function save_plot(type){
       svgContent.appendChild(legend.cloneNode(true));
     }
 
-    var axesLabels = plot.querySelectorAll('.xtitle, .ytitle');
+    var axesLabels = plot.querySelectorAll('.xtitle, .ytitle, .y2title');
     axesLabels.forEach(function (label) {
       svgContent.appendChild(label.cloneNode(true));
     });
@@ -396,7 +431,7 @@ function save_plot(type){
     // Lets convert back to scattergl
     var plot = document.getElementById('gd');
     for (let i = 0; i < plot.data.length; i++) {
-        if (plot.data[i].type === 'scatter') {
+        if (plot.data[i].type == 'scatter') {
             plot.data[i].type = 'scattergl';
         }
     }
@@ -568,7 +603,7 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
         save_plot("png");
       }
     }] // END modeBarButtonsToAdd,
-    },); // END Plotly.newPlot
+    },); // END 
 
     update();
 
@@ -861,7 +896,8 @@ ipcRenderer.on('load_file-task-finished', function(event,param) {
 		var update = param[0];
 		var header = param[1][0];
 		var data = param[1].slice(1, param[1].length);
-		plot(header, transpose(data), param[0]);
+    data = transpose(data)
+		plot(header, data, param[0]);
  });
 
 function change_template(){
