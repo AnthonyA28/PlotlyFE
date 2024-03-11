@@ -30839,7 +30839,7 @@ function movingAverage(x, y, dx) {
     return [newx, newy];
 }
 
-var n_data_lim = 2000;
+var n_data_lim = 1000;
 var baseData = []
 function downSample(data, size){
   for(var i = 0; i< data.length; i +=1) {
@@ -30882,6 +30882,10 @@ function upscaleBetween(xrangeStart, xrangeEnd){
     var newData = []
 
     for (let i = 0; i < baseData.length; i++) {
+
+      if(baseData[i].length <= n_data_lim){
+        continue
+      }
       
       var startIndex = indexOfFirstValueAbove(baseData[i].x, xrangeStart) - 2 
       var endIndex = indexOfFirstValueAbove(baseData[i].x, xrangeEnd) + 2 
@@ -30905,8 +30909,8 @@ function upscaleBetween(xrangeStart, xrangeEnd){
       var x2 = baseData[i].x.slice(startIndex, endIndex);
       var y2 = baseData[i].y.slice(startIndex, endIndex);
 
-      var x3 = baseData[i].x.slice(endIndex, baseData[i].x.length-1);
-      var y3 = baseData[i].y.slice(endIndex, baseData[i].x.length-1);
+      var x3 = baseData[i].x.slice(endIndex);
+      var y3 = baseData[i].y.slice(endIndex);
 
 
       if( x1.length > n_data_lim ) {
