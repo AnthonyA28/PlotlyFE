@@ -30935,7 +30935,7 @@ function sampleZoom(eventdata){
 
 function newPlot(gd, data, layout, config) {
   baseData = JSON.parse(JSON.stringify(data));
-  data = downSample(JSON.parse(JSON.stringify(baseData)), n_data_lim);
+  data = downSample(data, n_data_lim);
   
   gd = Lib.getGraphDiv(gd);
   
