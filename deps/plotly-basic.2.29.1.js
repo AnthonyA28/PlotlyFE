@@ -32045,10 +32045,6 @@ function cleanDeprecatedAttributeKeys(aobj) {
  *  attribute object `{astr1: val1, astr2: val2 ...}`
  *  allows setting multiple attributes simultaneously
  */
-
-
-
-
 function relayout(gd, astr, val) {
   gd = Lib.getGraphDiv(gd);
   helpers.clearPromiseQueue(gd);
@@ -32510,7 +32506,6 @@ function updateAutosize(gd) {
  *  integer or array of integers for the traces to alter (all if omitted)
  *
  */
-// AJA
 function update(gd, traceUpdate, layoutUpdate, _traces) {
   gd = Lib.getGraphDiv(gd);
   helpers.clearPromiseQueue(gd);
