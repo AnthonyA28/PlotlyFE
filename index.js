@@ -5,7 +5,7 @@ var inputer_traces = [];
 
 const {ipcRenderer}       = require('electron');
 
-
+document.getElementById('gd').n_data_lim = 1000;
 
 
 
@@ -260,6 +260,7 @@ function plot(header, data, update_nums=false){
 
 
   // traces = downSample(traces)
+
   Plotly.newPlot(document.getElementById('gd'), traces, inputer_layout.get_data(), {
       
       modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
@@ -1101,6 +1102,17 @@ document.getElementById('exportData').addEventListener('click', function() {
 	document.body.removeChild(a);
 });
 
+
+document.getElementById('downsample_size').addEventListener('change', function() {
+    // Get the current value of the input
+    let currentValue = parseInt(document.getElementById('downsample_size').value);
+    // If the value is NaN or negative, set it to 1000
+    if (isNaN(currentValue) || currentValue <= 0) {
+        currentValue = 1000;
+    }
+    document.getElementById('gd').n_data_lim = currentValue;
+    update();
+});
 
 
 
