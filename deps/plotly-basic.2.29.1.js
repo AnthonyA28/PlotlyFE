@@ -30857,16 +30857,9 @@ function downSample(data, size){
 }
 
 
-function indexOfFirstValueAbove(arr, a) {
-    for (let i = 0; i < arr.length; i++) {
-        if (arr[i] > a) {
-            return i; // Return the index of the first value above a
-        }
-    }
-    return arr.length-1; // If no value above a is found, return -1
-}
 
-function upscaleBetween(xrangeStart, xrangeEnd){
+
+function upscaleBetween(gd, xrangeStart, xrangeEnd){
 
     if (typeof xrangeStart === 'undefined' || typeof xrangeEnd === 'undefined') {
       var newData = downSample(JSON.parse(JSON.stringify(baseData)), n_data_lim);
@@ -30875,10 +30868,19 @@ function upscaleBetween(xrangeStart, xrangeEnd){
         plotDiv.data[i].x = newData[i].x
         plotDiv.data[i].y = newData[i].y
       }
-      redraw('gd');
+      redraw(gd);
       return 
     }
       
+    function indexOfFirstValueAbove(arr, a) {
+      for (let i = 0; i < arr.length; i++) {
+          if (arr[i] > a) {
+              return i; // Return the index of the first value above a
+          }
+      }
+      return arr.length-1; // If no value above a is found, return -1
+    }
+
     var newData = []
 
     for (let i = 0; i < baseData.length; i++) {
@@ -30949,7 +30951,7 @@ function upscaleBetween(xrangeStart, xrangeEnd){
     plotDiv.data[i].x = newData[i].x
     plotDiv.data[i].y = newData[i].y
   }
-  redraw('gd');
+  redraw(gd);
 }
 
 function sampleZoom(eventdata){
@@ -30959,7 +30961,7 @@ function sampleZoom(eventdata){
       'y-axis start:' + eventdata['yaxis.range[0]'] + '\n' +
       'y-axis end:' + eventdata['yaxis.range[1]'] 
     );
-    upscaleBetween(eventdata['xaxis.range[0]'], eventdata['xaxis.range[1]'])
+    upscaleBetween(gd, eventdata['xaxis.range[0]'], eventdata['xaxis.range[1]'])
 };
 
 
@@ -30976,7 +30978,7 @@ function newPlot(gd, data, layout, config) {
 
   var result = exports._doPlot(gd, data, layout, config); // need to finalize before I add the sampleZoom callback 
 
-  gd.on('plotly_relayout', sampleZoom)
+  gd.on('plotly_relayout', function (eventdata){sampleZoom(eventdata, gd);})
 
   return result;
 }
