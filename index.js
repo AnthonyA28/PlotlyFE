@@ -608,13 +608,12 @@ function update(){
             width: traces[i].line.width*2,
             color: traces[i].marker.color, 
           }
-        // traces[i+1].dontupdate = true
-        inputer_traces[i+1].inputs.visible.elem.selectedIndex = 1 
+        // inputer_traces[i+1].inputs.visible.elem.selectedIndex = 1 
         traces[i+1].visible = false
           
       }else{
         traces[i]["error_y"] = {}
-        inputer_traces[i+1].inputs.visible.elem.selectedIndex = 0
+        // inputer_traces[i+1].inputs.visible.elem.selectedIndex = 0
         traces[i+1].visible = true
       }
     }
@@ -803,6 +802,16 @@ document.getElementById("palettes").addEventListener("change", function (){
 
 
   document.getElementById("error_bars").addEventListener('change', function() {
+      for(var i = 0 ; i < traces.length; i ++){
+        if(i < traces.length-1 && i % 2 == 0 ){
+          if(document.getElementById("error_bars").checked){
+          inputer_traces[i+1].inputs.visible.elem.selectedIndex = 1 
+            
+        }else{
+          inputer_traces[i+1].inputs.visible.elem.selectedIndex = 0
+        }
+      }
+    }
     update();
   });
 
