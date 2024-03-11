@@ -30839,7 +30839,7 @@ function movingAverage(x, y, dx) {
     return [newx, newy];
 }
 
-var n_data_lim = 1000;
+var n_data_lim = 2000;
 var baseData = []
 function downSample(data, size){
   for(var i = 0; i< data.length; i +=1) {
@@ -30899,8 +30899,23 @@ function upscaleBetween(xrangeStart, xrangeEnd){
       }
 
 
+      var x1 = baseData[i].x.slice(0, startIndex);
+      var y1 = baseData[i].y.slice(0, startIndex);
+
       var x2 = baseData[i].x.slice(startIndex, endIndex);
       var y2 = baseData[i].y.slice(startIndex, endIndex);
+
+      var x3 = baseData[i].x.slice(endIndex, baseData[i].x.length-1);
+      var y3 = baseData[i].y.slice(endIndex, baseData[i].x.length-1);
+
+
+      if( x1.length > n_data_lim ) {
+        var scale_fac  = (x1.length/n_data_lim)*10
+        var dx = ((x1[x1.length-1]-x1[0])/x1.length)*scale_fac
+        var result = movingAverage(x1, y1, dx)
+        x1 = result[0]
+        y1 = result[1]    
+      }
 
       if( x2.length > n_data_lim ) {
         var scale_fac  = (x2.length/n_data_lim)
@@ -30909,8 +30924,19 @@ function upscaleBetween(xrangeStart, xrangeEnd){
         x2 = result[0]
         y2 = result[1]    
       }
-     
-      newData.push({'x': x2, 'y': y2})
+
+      if( x3.length > n_data_lim ) {
+        var scale_fac  = (x3.length/n_data_lim)*10
+        var dx = ((x3[x3.length-1]-x3[0])/x3.length)*scale_fac
+        var result = movingAverage(x3, y3, dx)
+        x3 = result[0]
+        y3 = result[1]    
+      }
+      
+      var x = x1.concat(x2).concat(x3)
+      var y = y1.concat(y2).concat(y3)
+      
+      newData.push({'x': x, 'y': y})
 
   }
 
