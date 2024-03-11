@@ -30819,13 +30819,210 @@ function redraw(gd) {
  * @param {Object} layout
  * @param {Object} config
  */
-function newPlot(gd, data, layout, config) {
-  gd = Lib.getGraphDiv(gd);
 
+function movingAverage(x, y, dx) {
+    var newx = [x[0]];
+    var newy = [y[0]];
+    var i = 0;
+    while (i < x.length - 1) {
+        var j = i + 1;
+        var sum_y = y[i + 1]; // Initialize sum_y with the next element of y
+        while (j < x.length - 1 && x[j] - x[i] < dx) {
+            sum_y += y[j + 1]; // Update sum_y with the next element of y
+            j++;
+        }
+        var avg = sum_y / (j - i); // Calculate average
+        i = j;
+        newx.push(x[j]);
+        newy.push(avg);
+    }
+    return [newx, newy];
+}
+
+var n_data_lim = 1000;
+var baseData = []
+function downSample(data, size){
+  for(var i = 0; i< data.length; i +=1) {
+    if(data[i].x.length > n_data_lim){
+      console.log("Original  size: " , data[i].x.length)
+      var scale_fac  = (data[i].x.length/n_data_lim)
+      var dx = ((data[i].x[data[i].x.length-1]-data[i].x[0])/data[i].x.length)*scale_fac
+      var result = movingAverage(data[i].x, data[i].y, dx)
+      data[i].x = result[0]
+      data[i].y = result[1]    
+      console.log("Downsampled size: " , data[i].x.length)
+    }
+  }
+  return data
+}
+
+
+function indexOfFirstValueAbove(arr, a) {
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i] > a) {
+            return i; // Return the index of the first value above a
+        }
+    }
+    return arr.length-1; // If no value above a is found, return -1
+}
+
+function upscaleBetween(xrangeStart, xrangeEnd){
+
+    if (typeof xrangeStart === 'undefined' || typeof xrangeEnd === 'undefined') {
+      var newData = downSample(JSON.parse(JSON.stringify(baseData)), n_data_lim);
+      var plotDiv = document.getElementById('gd');
+      for (let i = 0; i < plotDiv.data.length; i++) {
+        plotDiv.data[i].x = newData[i].x
+        plotDiv.data[i].y = newData[i].y
+      }
+      redraw('gd');
+      return 
+    }
+      
+    var newData = []
+
+    for (let i = 0; i < baseData.length; i++) {
+      
+      var startIndex = indexOfFirstValueAbove(baseData[i].x, xrangeStart) - 2 
+      var endIndex = indexOfFirstValueAbove(baseData[i].x, xrangeEnd) + 2 
+
+      if( startIndex < 0 ){
+        startIndex = 0 
+      } 
+      if ( endIndex >= baseData[i].x.length) {
+        endIndex = baseData[i].x.length -1 
+      }
+
+
+      if(startIndex >= endIndex ){
+        return
+      }
+
+
+      var x2 = baseData[i].x.slice(startIndex, endIndex);
+      var y2 = baseData[i].y.slice(startIndex, endIndex);
+
+      if( x2.length > n_data_lim ) {
+        var scale_fac  = (x2.length/n_data_lim)
+        var dx = ((x2[x2.length-1]-x2[0])/x2.length)*scale_fac
+        var result = movingAverage(x2, y2, dx)
+        x2 = result[0]
+        y2 = result[1]    
+      }
+     
+      newData.push({'x': x2, 'y': y2})
+
+  }
+
+  var plotDiv = document.getElementById('gd');
+  for (let i = 0; i < plotDiv.data.length; i++) {
+    plotDiv.data[i].x = newData[i].x
+    plotDiv.data[i].y = newData[i].y
+  }
+  redraw('gd');
+}
+
+
+// function upscaleBetween(xrangeStart, xrangeEnd){
+
+//     if (typeof xrangeStart === 'undefined' || typeof xrangeEnd === 'undefined') {
+//       var newData = downSample(baseData, n_data_lim);
+//       var plotDiv = document.getElementById('gd');
+//       for (let i = 0; i < plotDiv.data.length; i++) {
+//         plotDiv.data[i].x = newData[i].x
+//         plotDiv.data[i].y = newData[i].y
+//       }
+//       redraw('gd');
+//       return 
+//     }
+      
+//     var newData = []
+
+//     for (let i = 0; i < baseData.length; i++) {
+      
+//       var beforeZoom = [];
+//       var inZoom = [];
+//       var afterZoom = [];
+
+//       var result = splitArrayIntoThreeRegions(baseData[i].x, xrangeStart, xrangeEnd); 
+//       var zeroIndex = result[0];
+      
+//       var xrangeStartIndex = result[1];
+//       var xrangeEndIndex = result[2];
+
+//       var x1 = baseData[i].x.slice(zeroIndex, xrangeStartIndex + 1);
+//       var x2 = baseData[i].x.slice(xrangeStartIndex, xrangeEndIndex + 1);
+//       var x3 = baseData[i].x.slice(xrangeEndIndex + 1, baseData[i].x.length);
+
+//       var y1 = baseData[i].y.slice(zeroIndex, xrangeStartIndex + 1);
+//       var y2 = baseData[i].y.slice(xrangeStartIndex, xrangeEndIndex + 1);
+//       var y3 = baseData[i].y.slice(xrangeEndIndex + 1, baseData[i].x.length);
+
+
+//       var scale_fac  = (baseData[i].x.length/(n_data_lim/3))
+//       var dxOuter = ((baseData[i].x[baseData[i].x.length-1]-baseData[i].x[0])/baseData[i].x.length)*scale_fac
+
+//       var result = movingAverage(x1, y1, dxOuter)
+//       x1 = result[0]
+//       y1 = result[1]
+
+//       result = movingAverage(x3, y3, dxOuter)
+//       x3 = result[0]
+//       y3 = result[1]    
+
+//       scale_fac  = (x2.length/(n_data_lim))
+//       var dxInner = ((x2[x2.length-1]-x2[0])/x2.length)*scale_fac
+
+//       result = movingAverage(x2, y2, dxInner)
+//       x2 = result[0]
+//       y2 = result[1]    
+
+//       // var x = x1.concat(x2).concat(x3);
+//       // var y = y1.concat(y2).concat(y3);
+
+//       var x = x2
+//       var y = y2
+      
+
+//       newData.push({'x': x, 'y': y})
+
+//   }
+
+//   var plotDiv = document.getElementById('gd');
+//   for (let i = 0; i < plotDiv.data.length; i++) {
+//     plotDiv.data[i].x = newData[i].x
+//     plotDiv.data[i].y = newData[i].y
+//   }
+//   redraw('gd');
+// }
+
+function sampleZoom(eventdata){
+    console.log(
+      'x-axis start:' + eventdata['xaxis.range[0]'] + '\n' +
+      'x-axis end:' + eventdata['xaxis.range[1]'] + '\n' +
+      'y-axis start:' + eventdata['yaxis.range[0]'] + '\n' +
+      'y-axis end:' + eventdata['yaxis.range[1]'] 
+    );
+    upscaleBetween(eventdata['xaxis.range[0]'], eventdata['xaxis.range[1]'])
+};
+
+
+function newPlot(gd, data, layout, config) {
+  baseData = JSON.parse(JSON.stringify(data));
+  data = downSample(JSON.parse(JSON.stringify(baseData)), n_data_lim);
+  
+  gd = Lib.getGraphDiv(gd);
+  
   // remove gl contexts
   Plots.cleanPlot([], {}, gd._fullData || [], gd._fullLayout || {});
+
   Plots.purge(gd);
-  return exports._doPlot(gd, data, layout, config);
+
+  var result = exports._doPlot(gd, data, layout, config); // need to finalize before I add the sampleZoom callback 
+
+  gd.on('plotly_relayout', sampleZoom)
+
+  return result;
 }
 
 /**
@@ -31922,6 +32119,10 @@ function cleanDeprecatedAttributeKeys(aobj) {
  *  attribute object `{astr1: val1, astr2: val2 ...}`
  *  allows setting multiple attributes simultaneously
  */
+
+
+
+
 function relayout(gd, astr, val) {
   gd = Lib.getGraphDiv(gd);
   helpers.clearPromiseQueue(gd);
@@ -32383,6 +32584,7 @@ function updateAutosize(gd) {
  *  integer or array of integers for the traces to alter (all if omitted)
  *
  */
+// AJA
 function update(gd, traceUpdate, layoutUpdate, _traces) {
   gd = Lib.getGraphDiv(gd);
   helpers.clearPromiseQueue(gd);
