@@ -489,8 +489,15 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
     
   }
   var new_traces = json["traces"];
+
+
   for(var i = 0 ; i < new_traces.length &&  i < new_traces.length; i ++ ){
     new_traces[i]['name'] = decodeURIComponent(new_traces[i]['name'])
+    if( i % 2 == 0 && new_traces[i].hasOwnProperty("error_y") && new_traces[i]["error_y"].hasOwnProperty("array")  && new_traces[i]["error_y"]["array"].length > 0 ){
+        document.getElementById("error_bars").checked = true
+    } else if (i % 2 == 0 && ( (!new_traces[i].hasOwnProperty("error_y") ) || (new_traces[i].hasOwnProperty("error_y") && !new_traces[i]["error_y"].hasOwnProperty("array"))  ) ){
+        document.getElementById("error_bars").checked = false
+    }
   }
   if(!update_data){
     for(var i = 0 ; i < prev_data.length && i < new_traces.length &&  i < traces.length; i ++ ){
@@ -581,7 +588,13 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
     // Update the colors in the color options dropdowns by triggering palette changed 
     var event = new Event('change');
     document.getElementById("palettes").dispatchEvent(event);
-  
+ 
+
+    const inputElement = document.getElementById('error_bars');
+    const changeEvent = new Event('change');
+    inputElement.dispatchEvent(changeEvent);
+
+      
 }
 
 function update(){
@@ -802,6 +815,12 @@ document.getElementById("palettes").addEventListener("change", function (){
 
 
   document.getElementById("error_bars").addEventListener('change', function() {
+      
+      
+      var layout = inputer_layout.get_data();
+      layout.error_bars = document.getElementById("error_bars").checked;
+      inputer_layout.update_data(layout);
+
       for(var i = 0 ; i < traces.length; i ++){
         if(i < traces.length-1 && i % 2 == 0 ){
           if(document.getElementById("error_bars").checked){
