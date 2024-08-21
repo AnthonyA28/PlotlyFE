@@ -126,10 +126,50 @@ ipcMain.on("get_archived_plots", function(event, arg){
         archived_list.push(file);
       }
     });
+    archived_list.reverse();
     console.log(archived_list);
     event.sender.send('available_plots', archived_list);   
   });
 });
+
+ipcMain.on("get_colorSchemes", function(event, arg) {
+  var dir = path.normalize(path.join(app.getPath('userData'), "_ColorSchemes"));
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+  console.log("dir ", dir);
+  var colorSchemes = [];
+
+  fs.readdir(dir, (err, files) => {
+    if (err) {
+      console.error("Error reading directory:", err);
+      event.sender.send('available_plots', colorSchemes);
+      return;
+    }
+
+    files.forEach((file) => {
+      if (file.endsWith(".txt")) {
+        console.log(file);
+        const filePath = path.join(dir, file);
+
+        try {
+          const fileContent = fs.readFileSync(filePath, 'utf8'); // Read file contents
+          colorSchemes.push({
+            name: file,
+            content: fileContent // Store file content
+          });
+        } catch (readErr) {
+          console.error("Error reading file:", readErr);
+        }
+      }
+    });
+
+    colorSchemes.reverse();
+    console.log(colorSchemes);
+    event.sender.send('available_colorSchemes', colorSchemes);
+  });
+});
+
 
 
 function get_templ_from_name(event,arg){
@@ -217,6 +257,15 @@ ipcMain.on("archive_plot", function(event, arg){
     });
 
 });
+
+// ipcMain.on("new_colorscheme", function(event, arg){
+//     var dir = path.normalize(path.join(app.getPath('userData'),"_ColorSchemes"));
+//     var savename = path.join(dir, arg[1])
+//     fs.writeFile(savename, arg[0], function (err) {
+//       console.log("_ColorSchemes: ", savename)
+//     });
+
+// });
 
 
 

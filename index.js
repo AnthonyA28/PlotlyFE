@@ -804,8 +804,8 @@ document.getElementById("palettes").addEventListener("change", function (){
     if(n_colors>50){
       n_colors = 50;
     }
-    else if(n_colors<2){
-      n_colors = 2;
+    else if(n_colors<3){
+      n_colors = 3;
     }
     color = n_colors.toString().concat("_").concat(color.slice(0, color.length-1));
   }
@@ -973,6 +973,11 @@ ipcRenderer.on('available_plots', function(event, arg){
   document.getElementById("archive_div").appendChild(dropdown);
 });
 
+
+ipcRenderer.send("get_colorSchemes");
+ipcRenderer.on('available_colorSchemes', function(event, arg){
+  console.log(arg);
+})
 
 
 document.getElementById('save_template').addEventListener( 'click', function(){
