@@ -318,15 +318,28 @@ ipcMain.on("load_file", function(event, arg){
     const wb = XLSX.readFile(name);
     const sheet = wb.Sheets[wb.SheetNames[0]]
     console.log(sheet);
-    for(var n =0; n < 51; n ++ ) {
-        var cell = String.fromCharCode(65 + n);
-        if( sheet[cell.concat("1")] == undefined){
-          header.push('');
-        }else{
-          header.push(sheet[cell.concat("1")].v)
-        }
+      function getColumnName(index) {
+          let columnName = '';
+          while (index >= 0) {
+              columnName = String.fromCharCode((index % 26) + 65) + columnName;
+              index = Math.floor(index / 26) - 1;
+          }
+          return columnName;
       }
-      console.log(header) 
+
+      // Assuming `sheet` is already defined and contains the Excel sheet data
+      var header = [];
+
+      for (var n = 0; n < 100; n++) {
+          var cell = getColumnName(n).concat("1");
+          if (sheet[cell] === undefined) {
+              header.push('');
+          } else {
+              header.push(sheet[cell].v);
+          }
+      }
+
+      console.log(header);
       var obj = xlsx.parse(name); // parses a file
       console.log(obj)
       console.log(obj[0]['data'])
@@ -351,12 +364,12 @@ ipcMain.on("load_file", function(event, arg){
                   const wb = XLSX.readFile(name);
                   const sheet = wb.Sheets[wb.SheetNames[0]]
                   console.log(sheet);
-                  for(var n =0; n < 51; n ++ ) {
-                    var cell = String.fromCharCode(65 + n);
-                    if( sheet[cell.concat("1")] == undefined){
-                      header.push('');
-                    }else{
-                      header.push(sheet[cell.concat("1")].v)
+                  for(var n =0; n < 100; n ++ ) {
+                    var cell = getColumnName(n).concat("1");
+                    if (sheet[cell] === undefined) {
+                        header.push('');
+                    } else {
+                        header.push(sheet[cell].v);
                     }
                   }
                   obj[0]['data'][0] = header

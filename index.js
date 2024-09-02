@@ -756,16 +756,33 @@ document.getElementById('helper_pair_markers').addEventListener( 'click', functi
   update();
 });
 
-document.getElementById('helper_pair_linestyles').addEventListener( 'click', function(){
-  console.log("helper_pair_linestyles")
+
+document.getElementById('helper_alternate_markers').addEventListener( 'click', function(){
+  console.log("helper_alternate_markers")
   
-  for(var i = 0; i < inputer_traces.length; i += 1 ){
-    inputer_traces[i].inputs.line.dash.elem.selectedIndex = 0;
+  var j = 0;
+  for(var i = 2; i < inputer_traces.length; i += 1 ){
+    inputer_traces[i].inputs.marker.symbol.elem.selectedIndex = inputer_traces[0].inputs.marker.symbol.elem.selectedIndex;
     i += 1
     if(i >= inputer_traces.length){
       break
     }
-    inputer_traces[i].inputs.line.dash.elem.selectedIndex = 1;
+    inputer_traces[i].inputs.marker.symbol.elem.selectedIndex = inputer_traces[1].inputs.marker.symbol.elem.selectedIndex;
+    j += 1;
+  }
+  update();
+});
+
+document.getElementById('helper_alternate_linestyles').addEventListener( 'click', function(){
+  console.log("helper_alternate_linestyles")
+  
+  for(var i = 0; i < inputer_traces.length; i += 1 ){
+    inputer_traces[i].inputs.line.dash.elem.selectedIndex = inputer_traces[0].inputs.line.dash.elem.selectedIndex;
+    i += 1
+    if(i >= inputer_traces.length){
+      break
+    }
+    inputer_traces[i].inputs.line.dash.elem.selectedIndex = inputer_traces[1].inputs.line.dash.elem.selectedIndex;
   }
   update();
 });
