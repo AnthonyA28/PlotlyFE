@@ -315,12 +315,12 @@ ipcMain.on("load_file", function(event, arg){
                   const wb = XLSX.readFile(name);
                   const sheet = wb.Sheets[wb.SheetNames[0]]
                   console.log(sheet);
-                  for(var n =0; n < 51; n ++ ) {
-                    var cell = String.fromCharCode(65 + n);
-                    if( sheet[cell.concat("1")] == undefined){
-                      header.push('');
-                    }else{
-                      header.push(sheet[cell.concat("1")].v)
+                  for(var n =0; n < 100; n ++ ) {
+                    var cell = getColumnName(n).concat("1");
+                    if (sheet[cell] === undefined) {
+                        header.push('');
+                    } else {
+                        header.push(sheet[cell].v);
                     }
                   }
                   obj[0]['data'][0] = header
