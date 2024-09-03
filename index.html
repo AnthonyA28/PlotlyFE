@@ -11,27 +11,87 @@
 
 
 <style type="text/css">
-
-
-  body
-  {
+  body {
     font-size: 13px;
     margin-top: 0px;
     margin-bottom: 0px;
-    background-color: #ededed;
+    background-color: #272822; /* Monokai background color */
+    color: #f8f8f2; /* Monokai text color */
   }
 
   .collapsible {
-    color: #000;
-    background-color: #FFF;
+    color: #f8f8f2; /* Monokai text color */
+    background-color: #49483e; /* Monokai button background */
     border: none;
     text-align: right;
     font-size: 13px;
     margin-top: 0px;
     margin-bottom: 0px;
   }
-  .active, .collapsible:hover {
-    background-color: #aaa;
+
+  .active,
+  .collapsible:hover {
+    background-color: #66d9ef; /* Monokai highlight color */
+  }
+
+  .content-wraper {
+    background-color: #272822;
+    color: #f8f8f2;
+  }
+
+  h3, h4, strong {
+    color: #a6e22e; /* Monokai green for headers */
+  }
+
+  select, input, button {
+    background-color: #3e3d32;
+    color: #f8f8f2;
+    border: 1px solid #75715e;
+    padding: 5px;
+    margin: 5px 0;
+  }
+
+  select:focus, input:focus, button:focus {
+    outline: none;
+    border-color: #66d9ef; /* Monokai blue */
+  }
+
+  a {
+    color: #66d9ef; /* Monokai link color */
+  }
+
+  #wrapper {
+    border: 1px solid #75715e; /* Monokai border color */
+  }
+
+  #gd_div {
+    border: 1px solid #75715e;
+  }
+
+  table {
+    width: 100%;
+    background-color: #272822;
+    color: #f8f8f2;
+    border-collapse: collapse;
+    border: 1px solid #75715e;
+  }
+
+  .tg td, .tg th {
+    border: 1px solid #75715e;
+    padding: 10px 5px;
+    overflow: hidden;
+  }
+
+  .tg th {
+    background-color: #49483e; /* Monokai header background */
+  }
+
+  .tg .tg-cly1,
+  .tg .tg-1wig,
+  .tg .tg-m919,
+  .tg .tg-yla0,
+  .tg .tg-0lax {
+    color: #f8f8f2;
   }
 </style>
 
@@ -44,7 +104,8 @@
     <div style="display: inline-block;width:350px;height:2000px;border: 1px solid #FFFFFF; vertical-align: top;">
 
 
-      <input type="file" id="input_file" style="color: transparent;font-size: 22px; margin-bottom: 14px; margin-left: 5px; margin-top: 5px" >
+  <input type="file" id="input_file" style="color: transparent; font-size: 17px; margin-bottom: 1px; margin-left: 5px; margin-top: 5px; width: 300px; height: 50px;">
+
       <h3>
           <a href="docs/index.html">Help/Documentation</a>
       </h3>
@@ -85,7 +146,7 @@
         <option>Paired</option>
         <option>Dark2</option>
         <option>Pastel1</option>
-        <!-- <option>Set1</option> -->
+        <option>Set1</option>
         <option>tab10</option>
         
         <option>viridis_</option>
@@ -93,41 +154,32 @@
         <option>magma_</option>
         <option>magma_r_</option>
         
-        <option>YlGn_</option>
-        <option>YlGnBu_</option>
-        <option>GnBu_</option>
-        <option>BuGn_</option>
-        <option>PuBuGn_</option>
-        <option>PuBu_</option>
-        <option>BuPu_</option>
-        <option>RdPu_</option>
-        <option>PuRd_</option>
-        <option>OrRd_</option>
-        <option>YlOrRd_</option>
-        <option>YlOrBr_</option>
-        <option>Purples_</option>
-        <option>Blues_</option>
-        <option>Greens_</option>
-        <option>Oranges_</option>
-        <option>Reds_</option>
-        <option>Greys_</option>
-        <option>PuOr_</option>
-        <option>BrBG_</option>
-        <option>PRGn_</option>
-        <option>PiYG_</option>
-        <option>RdBu_</option>
-        <option>RdGy_</option>
-        <option>RdYlBu_</option>
-        <option>Spectral_</option>
-        <option>RdYlGn_</option>
-        <option>Accent_</option>
-        <option>Dark2_</option>
-        <option>Paired_</option>
-        <option>Pastel1_</option>
-        <option>Pastel2_</option>
-        <option>Set1_</option>
-        <option>Set2_</option>
-        <option>Set3_</option>
+        <option>Yellow_Green</option>
+        <option>Yellow_Green_Blue</option>
+        <option>Green_Blue</option>
+        <option>Blue_Green</option>
+        <option>Purple_Blue_Green</option>
+        <option>Purple_Blue</option>
+        <option>Blue_Purple</option>
+        <option>Red_Purple</option>
+        <option>Purple_Red</option>
+        <option>Orange_Red</option>
+        <option>Yellow_Orange_Red</option>
+        <option>Yellow_Orange_Brown</option>
+        <option>Brown_Blue_Green</option>
+        <option>Purple_Green</option>
+        <option>Pink_Yellow_Green</option>
+        <option>Red_Blue</option>
+        <option>Red_Grey</option>
+        <option>Red_Yellow_Blue</option>
+        <option>Spectral</option>
+        <option>Accent</option>
+        <option>Dark2</option>
+        <option>Paired</option>
+        
+        <option>Pastel2</option>
+        <option>Set2</option>
+        <option>Set3</option>
 
 
 
@@ -136,7 +188,7 @@
       <br>
       <h3>Use error bars:  <input type="checkbox" id="error_bars" ></h3>
       <h3>Set Y2 color:    <input type="checkbox" id="helper_set_y2_color" ></h3>
-      <h3>downsample size: <input type="number" style="width:100px;" id="downsample_size" value="1000" min="100" max="1000000" > </input></h3>
+      <!-- <h3>downsample size: <input type="number" style="width:100px;" id="downsample_size" value="1000" min="100" max="1000000" > </input></h3> -->
       <h3>Layout:</h3>
       <div id="layout">
         <div id="app" ></div>

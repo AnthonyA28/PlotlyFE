@@ -188,7 +188,17 @@ function plot(header, data, update_nums=false){
     traces = traces.slice(0, datas.length);
   }
 
-  var palette = document.getElementById("palettes").options[document.getElementById("palettes").selectedIndex].innerText;
+  var palette_obj = document.getElementById("palettes")
+  if (!palette_obj || palette_obj.options.length === 0) {
+    console.error("Palette dropdown is empty or not initialized correctly.");
+    // Initialize or set default options as needed
+  }
+  var palindex = palette_obj.selectedIndex;
+  if(palindex == -1){
+    palette_obj.selectedIndex = 0;
+    palindex = 0;
+  }
+  var palette = document.getElementById("palettes").options[palindex].innerText;
   if(palette.endsWith("_")){
     palette = document.getElementById("n_colors").value.concat("_").concat(palette);
     palette = palette.slice(0, -1);
@@ -197,9 +207,14 @@ function plot(header, data, update_nums=false){
 
 
   for(var j = 0; j< datas.length; j +=1){
+    datas[j][0] = datas[j][0].map(value => typeof value === 'string' ? parseFloat(value) : value);
+    datas[j][1] = datas[j][1].map(value => typeof value === 'string' ? parseFloat(value) : value);
+
     if( j < traces.length){
-      traces[j].x = datas[j][0]
-      traces[j].y = datas[j][1]
+      // Around the line where data is assigned to traces
+      traces[j].x = datas[j][0];
+      traces[j].y = datas[j][1];
+      console.log('After assignment:', traces[0].x['length'], traces[0].y['length']); // Verify the data remains intact
     }else{
 
     var marker_shape = marker_shapes[j%marker_shapes.length];
@@ -259,9 +274,10 @@ function plot(header, data, update_nums=false){
   document.getElementById("palettes").dispatchEvent(new Event('change')); // Force the inputer_traces color options box to update color 
 
 
-  // traces = downSample(traces)
-
-  Plotly.newPlot(document.getElementById('gd'), traces, inputer_layout.get_data(), {
+  // traces = downSample(traces) // this just updates the downsample info 
+  console.log('before plot:', traces[0].x['length'], traces[0].y['length']); // Verify the data remains intact
+  // Plotly.newPlot(document.getElementById('gd'), traces, inputer_layout.get_data(), {
+  Plotly.newPlot(document.getElementById('gd'), traces, layout, {
       
       modeBarButtonsToRemove: ['toImage', 'sendDataToCloud'],
       modeBarButtonsToAdd: [{
@@ -279,7 +295,7 @@ function plot(header, data, update_nums=false){
         }
       }]
   },);
-    
+    console.log('after plot plot:', traces[0].x['length'], traces[0].y['length']); // Verify the data remains intact
 };
 
 
@@ -458,23 +474,29 @@ function import_json(json_text, update_data=true, update_trace_styles=true, upda
   }
 
 
-  if(!update_size_only){
+if (!update_size_only) {
     var elem = document.getElementById("palettes");
-    var colors =[...elem.options].map(o => o.value)
-    pal = json["palette"]
-    if( pal.endsWith("_")){
-      document.getElementById("n_colors").value = parseInt(pal.slice(0,1))
-      pal = pal.slice(2)
-      console.log(pal);
-    }
-    selectOption(elem, colors.indexOf(pal));
-    pal = json["palette"]
-    if( pal.endsWith("_")){
-      pal = pal.slice(0, -1)
-      console.log(pal);
+    var colors = [...elem.options].map(o => o.value);
+    pal = json["palette"];
+
+    // Slice until the first underscore
+    const underscoreIndex = pal.indexOf('_');
+    if (underscoreIndex !== -1) {
+        // Extract the number before the underscore and set it to the value
+        document.getElementById("n_colors").value = parseInt(pal.slice(0, underscoreIndex));
+        pal = pal.slice(underscoreIndex + 1);  // Slice after the underscore
+        console.log(pal);
     }
 
-  }
+    selectOption(elem, colors.indexOf(pal));
+
+    // Reset pal to json value and trim the trailing underscore if it exists
+    pal = json["palette"];
+    if (pal.endsWith("_")) {
+        pal = pal.slice(0, -1);
+        console.log(pal);
+    }
+}
 
 
     
@@ -812,9 +834,25 @@ function set_y2_color(){
 
 
 document.getElementById("palettes").addEventListener("change", function (){
-  console.log("Color Palette selected ")
-  var index = document.getElementById("palettes").selectedIndex
-  var color = document.getElementById("palettes").options[index].innerText
+   console.log("Color Palette selected ");
+   var index = document.getElementById("palettes").selectedIndex;
+   
+   // Ensure there's always a valid selection
+   if(index === -1){
+     index = 0;  // Set to first index if none is selected
+     document.getElementById("palettes").selectedIndex = index;
+   }
+   
+   var colorObj = document.getElementById("palettes").options[index];
+   // Check if colorObj is a valid object
+   if (!colorObj || typeof colorObj !== 'object') {
+       console.log("invalid color object");
+       return; // Exit if not valid
+   }
+
+   var color = colorObj.innerText;
+
+  var color = colorObj.innerText
   if(color.endsWith("_")){
     var n_colors = document.getElementById("n_colors").value
     console.log("n_colors ", n_colors);
@@ -1153,16 +1191,16 @@ document.getElementById('exportData').addEventListener('click', function() {
 });
 
 
-document.getElementById('downsample_size').addEventListener('change', function() {
-    // Get the current value of the input
-    let currentValue = parseInt(document.getElementById('downsample_size').value);
-    // If the value is NaN or negative, set it to 1000
-    if (isNaN(currentValue) || currentValue <= 0) {
-        currentValue = 1000;
-    }
-    document.getElementById('gd').n_data_lim = currentValue;
-    update();
-});
+// document.getElementById('downsample_size').addEventListener('change', function() {
+//     // Get the current value of the input
+//     let currentValue = parseInt(document.getElementById('downsample_size').value);
+//     // If the value is NaN or negative, set it to 1000
+//     if (isNaN(currentValue) || currentValue <= 0) {
+//         currentValue = 10000;
+//     }
+//     document.getElementById('gd').n_data_lim = currentValue;
+//     update();
+// });
 
 
 
