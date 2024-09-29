@@ -288,25 +288,10 @@ ipcMain.on("load_file", function(event, arg){
 
       const ac = new AbortController();
       const { signal } = ac;
-      // setTimeout(() => ac.abort(), 100000);
 
       (async () => {
         try {
-          const watcher = watch(name, { signal });
-          for await (const watch_event of watcher){
-            console.log(watch_event);
-            try {
-                const data = fs.readFileSync(arg, 'utf8').toString() // convert Buffer to string
-                .split('\n') // split string to lines
-                .map(e => e.trim()) // remove white spaces for each line
-                .map(e => e.split(',').map(e => e.trim())); // split each line to array;
-                console.log(data);
-                event.sender.send('load_file-task-finished', [true, data]); 
-              } catch (err) {
-                console.error(err);
-              }
-            }
-          
+
         } catch (err) {
           if (err.name === 'AbortError')
             return;
@@ -350,42 +335,6 @@ ipcMain.on("load_file", function(event, arg){
 
       const ac = new AbortController();
       const { signal } = ac;
-      // setTimeout(() => ac.abort(), 100000);
 
-      (async () => {
-        try {
-          const watcher = watch(name, { signal });
-          for await (const watch_event of watcher){
-            console.log(watch_event);
-            try {
-                var obj = xlsx.parse(name); // parses a file
-
-                var header = []
-                  const wb = XLSX.readFile(name);
-                  const sheet = wb.Sheets[wb.SheetNames[0]]
-                  console.log(sheet);
-                  for(var n =0; n < 100; n ++ ) {
-                    var cell = getColumnName(n).concat("1");
-                    if (sheet[cell] === undefined) {
-                        header.push('');
-                    } else {
-                        header.push(sheet[cell].v);
-                    }
-                  }
-                  obj[0]['data'][0] = header
-
-                  event.sender.send('load_file-task-finished', [true, obj[0]['data']]); 
-
-              } catch (err) {
-                console.error(err);
-              }
-            }
-          
-        } catch (err) {
-          if (err.name === 'AbortError')
-            return;
-          throw err;
-        }
-      })();
   }
 });
